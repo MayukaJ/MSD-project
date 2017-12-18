@@ -1,0 +1,37 @@
+header{
+    background-color: #2e6da4;
+    width: 100vw;
+    height: 18vh;
+
+}
+
+.btn{padding: 15px;
+
+    background-color: orangered;
+    width:500px;
+    height:70px;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 20px;
+    color: white;
+}
+
+.btn:hover{
+
+}
+
+#btns{
+    margin-left: 20px;
+}
+
+#loginForm{
+    margin-right: 50px;
+}
+
+#table{
+    width: 100vw;
+}
+
+#loginForm{
+    float: right;
+}
