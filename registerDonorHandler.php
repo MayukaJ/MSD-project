@@ -1,52 +1,53 @@
 <?php
- if (isset($_POST['submit'])){
-     $con = mysqli_connect('127.0.0.1','root','');
-     $uname = mysqli_real_escape_string($conn,$_POST['username']); //uid = uid field name of the post
-     $Name = mysqli_real_escape_string($conn,$_POST['name']);
-     //$occ = mysqli_real_escape_string($conn,$_POST['occupation']);
-     //$pos = mysqli_real_escape_string($conn,$_POST['pos']);
-     //$addr = mysqli_real_escape_string($conn,$_POST['address']);
-     //$num = mysqli_real_escape_string($conn,$_POST['contact']);
-     $mail = mysqli_real_escape_string($conn,$_POST['email']);
-     $pwd = mysqli_real_escape_string($conn,$_POST['psw']);
-     $repwd = mysqli_real_escape_string($conn,$_POST['psw-repeat']);
 
+    $con = mysqli_connect('127.0.0.1','root','');
 
-     //check empty
-     if (empty($uname)||empty($Name)||empty($addr)||empty($num)||empty($mail)||empty($pwd)||empty($repwd)){
-         header("Location: ../registerrecipient.html?signup=empty");
-         exit();
-     }else{
+    if(!$con){
+        echo "Connection Failed";
+    }
 
-         if($pwd!=$repwd){
-             header("Location: ../registerrecipient.html?password=doesnt_match");
-         }else{
+    if(!mysqli_select_db($con,"donatelk")){
+        echo "No Database";
+    }
 
-             if (!filter_var($mail, FILTER_VALIDATE_EMAIL)){
-                 header("Location: ../registerrecipient.html?signup=invalidemail");
-                 exit();
-             }else{
-                 $sql = "SELECT * FROM user WHERE user_id='$uname'";
-                 $resultuid = mysqli_query($con,$sql);
-                 $recheck_uid = mysqli_num_rows($resultuid);
+    $uname =$_POST['username']; //uid = uid field name of the post
+    $Name = $_POST['name'];
+    $mail = $_POST['email'];
+    $pwd = $_POST['psw'];
+    $repwd = $_POST['psw-repeat'];
 
-                 if ($recheck_uid > 0){
-                     header("Location: ../registerrecipient.html?signup=userTaken");
-                     exit();
-                 }
-                 else{
-                     //hashing the password
-                     $hashedpwd = password_hash($pwd,PASSWORD_DEFAULT);
+        if($pwd!=$repwd){
+            echo "passwords doesnt match"; //header("Location: ../registerdonar.html?password=doesnt_match");
+        }else {
+            if (!filter_var($mail, FILTER_VALIDATE_EMAIL)){
+                 echo "mail error";//header("Location: ../registerrecipient.html?signup=invalidemail");
+                exit();
+            }else{
+                $sql = "SELECT * FROM user WHERE user_id='$uname'";
+                $resultuid = mysqli_query($con,$sql);
+                $recheck_uid = mysqli_num_rows($resultuid);
 
-                     $sql = "INSERT INTO user (user_id,name,address,phone,email) VALUES ('$uname','$Name','$addr','$num','$mail');";
-                     mysqli_query($con,$sql);
-                     header("Location: ../registerrecipient.html?signup=success");
-                     exit();
-                 }
-             }
+                if ($recheck_uid > 0){
+                   echo "error"; // header("Location: ../registerrecipient.html?signup=userTaken");
+                    exit();
+                }
+                else{
+                    //hashing the password
+                    $hashedpwd = password_hash($pwd,PASSWORD_DEFAULT);
+                    $add = "radasdasdasdasd";
+                    $sql = "INSERT INTO user (user_id,first_name,email) VALUES ('$uname','$Name',$mail);";
 
-         }
-     }
- }
+                    $sqlo = "INSERT INTO user (user_id, pwd, name, address, phone, email) VALUES ('$uname','$hashedpwd','$Name','$add','077452','$mail')";
+                    if(!mysqli_query($con,$sqlo))
+                    {
+                        echo "error";
+                    }else{
+                        echo "Success!";
+                    }
+                    //header("Location: ../registerrecipient.html?signup=success");
+                    exit();
+                }
+            }
+}
 
- ?>
+?>
