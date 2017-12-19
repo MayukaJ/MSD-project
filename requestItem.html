@@ -3,18 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Request new Item</title>
-    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="css/addItem.css">
 </head>
 <body>
-<header>
-<h3>What do you want?</h3>
-</header>
+<form class="form2">
+    <h3>What do you want?</h3>
 <select id="selectedCategory">
     <option value="null">Select Category...</option>
-    <option value="cat1">cat1</option>
-    <option value="cat2">Opel</option>
-    <option value="cat2">Audi</option>
+    <option value="clothes">Clothes</option>
+    <option value="books">Books/Educational</option>
+    <option value="shoes">Shoes</option>
+    <option value="sports">Sports Equipment</option>
+    <option value="electronic">Electronic appliances</option>
+    <option value="music">Musical/Aesthetic Equipment</option>
+    <option value="furniture">Furniture items</option>
 </select>
+<input type="text" placeholder="Enter keywords" name="keywords">
+<input type="submit" name="Search" value="Search">
+</form>
 <h4>Following items are available in //category//</h4>
 </body>
 </html>
