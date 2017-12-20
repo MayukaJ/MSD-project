@@ -1,6 +1,6 @@
 <?php
 include_once "Database.php";
-
+include_once "donor.php";
 $db = new Database();
 $user = $_POST["un"];
 $pass = $_POST["pw"];
@@ -19,10 +19,10 @@ else{
         $ch=$db->results[0][7];
         if ($ch=="R"){
             header('Location: '.'recipientHome.php');
+            $newuser = new Donor($db->results[0][0],$db->results[0][4],$db->results[0][7]);
         }elseif ($ch=="D"){
             header('Location: '.'donorHome.php');
         }
-        echo "login successfull";
     }else{
         header('Location: '.'login.html');
     }
