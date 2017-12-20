@@ -17,7 +17,7 @@ class User{
     const IMAGE_DIRECTORY ="user_images/";
 
 
-    public function addUser($id,$n,$pw,$p,$mail,$pic)
+    public function addUser($id,$n,$pw,$p,$mail)
     {
         $this->user_id=$id;
         $this->name=$n;
@@ -27,8 +27,8 @@ class User{
         $this->dateC=date("Y.m.d");
         $this->type= User::ALLOWED_TYPES[0];
         $this->status="0";
-        $this->photo=$pic;
-        $this->writetoDB('user',$this->user_id,$this->pass,$this->status,$this->dateC,$this->photo,$this->name,$this->phone,$this->email,$this->type);
+        //$this->photo=$pic;
+        $this->writetoDB('user',$this->user_id,$this->pass,$this->status,$this->dateC,$this->name,$this->phone,$this->email,$this->type);
         $this->writeAdditional();
     }
 
@@ -44,9 +44,9 @@ class User{
 
     }
 
-    public function writetoDB($table,$id,$pw,$st,$dt,$pht,$nme,$phn,$ml,$tp){
+    public function writetoDB($table,$id,$pw,$st,$dt,$nme,$phn,$ml,$tp){
         $DB = new Database();
-        $DB->insertInto($table,[$id,$pw,$st,$dt,$pht,$nme,$phn,$ml,$tp]);
+        $DB->insertInto($table,[$id,$pw,$st,$dt,$nme,$phn,$ml,$tp]);
     }
 
     public static function validateuser($uname,$mail,$pwd,$repwd){
