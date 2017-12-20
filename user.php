@@ -12,7 +12,7 @@ class User{
     protected $status;
     protected $dateC;
     protected $type;
-    protected $photo;
+    //protected $photo;
     const ALLOWED_TYPES = array("USER","REQUESTER","DONOR");
     const IMAGE_DIRECTORY ="user_images/";
 

@@ -5,6 +5,7 @@ $uname =$_POST['username'];
 $Name = $_POST['name'];
 $mail = $_POST['email'];
 $pwd = $_POST['psw'];
+$num = $_POST['num'];
 $repwd = $_POST['psw-repeat'];
 
 if(user::validateuser($uname,$mail,$pwd,$repwd)){
