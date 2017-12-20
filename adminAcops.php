@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Account operations | Admin</title>
     <link rel="stylesheet" type="text/css" href="css/home.css">
-    <link rel="stylesheet" type="text/css" href="css/home.css">
 </head>
 <body>
 <header><h3>Welcome //adminname//</h3></header>
