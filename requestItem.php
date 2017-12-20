@@ -49,7 +49,7 @@ if (array_key_exists("requested", $_GET)) {
     $itemList = Item::returnAvailItems($category, $keywordString, $db);
 
 
-    echo "<h4>Following items are available in :" . ucwords($category) . "</h4>";
+    echo "<h4>Following items are available in " . ucwords($category) . "</h4>";
 
     try {
         $db->makeTable(
