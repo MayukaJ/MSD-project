@@ -15,6 +15,16 @@
     <option value="cat2">Opel</option>
     <option value="cat2">Audi</option>
 </select>
+<input type="submit" value="Search" name="search">
 <h4>Following items are available in //category//</h4>
+
+<?php
+require_once("Database.php");
+require_once("Item.php");
+
+$db = new Database();
+$db->select('user', '*');
+$db->makeTable(['User ID', 'PWD', 'name', 'add', 'phone', 'email']);
+?>
 </body>
 </html>

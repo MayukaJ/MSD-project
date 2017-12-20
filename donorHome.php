@@ -15,9 +15,18 @@
     <tr>
         <div>
             <h4>Your current items</h4>
-            //additem table here//<p></p>
+
+            <?php
+            require_once("Database.php");
+            require_once("Item.php");
+
+            $db = new Database();
+            $db->select('user', '*');
+            $db->makeTable(['User ID', 'PWD', 'name', 'add', 'phone', 'email']);
+            ?>
         </div>
     </tr>
+    <br>
     <tr>
         <div>
             <a href="requestItem.html" class="btn">Add New Item</a>
@@ -26,7 +35,15 @@
     <tr>
         <div>
             <h4>Requests</h4>
-            //additem table here//<p></p>
+
+            <?php
+            require_once("Database.php");
+            require_once("Item.php");
+
+            $db = new Database();
+            $db->select('user', '*');
+            $db->makeTable(['User ID', 'PWD', 'name', 'add', 'phone', 'email']);
+            ?>
         </div>
     </tr>
 </table>
