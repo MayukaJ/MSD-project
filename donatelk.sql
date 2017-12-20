@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2017 at 10:53 AM
+-- Generation Time: Dec 17, 2017 at 12:13 PM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.1.12
 
@@ -82,18 +82,17 @@ CREATE TABLE `request` (
 CREATE TABLE `user` (
   `user_id` varchar(6) NOT NULL,
   `pwd` varchar(10) NOT NULL,
-  `name` varchar(20) NOT NULL,
+  `status` char(1) NOT NULL,
+  `date_created` date NOT NULL,
+  `photo` varchar(500) NOT NULL,
+  `first_name` varchar(20) NOT NULL,
+  `last_name` varchar(20) NOT NULL,
   `address` text NOT NULL,
   `phone` varchar(12) NOT NULL,
-  `email` varchar(50) NOT NULL
+  `email` varchar(50) NOT NULL,
+  `type` char(1) NOT NULL,
+  `nic` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`user_id`, `pwd`, `name`, `address`, `phone`, `email`) VALUES
-('dasdad', '$2y$10$X01', 'asdasdasd', 'radasdasdasdasd', '077452', 'dasdss@h.c');
 
 -- --------------------------------------------------------
 
