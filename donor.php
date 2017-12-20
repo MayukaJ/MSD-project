@@ -8,7 +8,7 @@ class Donor extends User{
     {
         $DB = new Database();
         $DB->insertInto('donor',[$user,'0']);
-        $this->addUser($user,$Name,$pwd,$num,$mail);
+        $this->addUser($user,$Name,$pwd,$num,$mail,'D');
     }
 
 

@@ -13,7 +13,20 @@ if (count($db->results)==0){
 }
 else{
     $db->select('user' , '*' , null , 'user_id =' . $uname1 );
-    echo $db->results[0][1];
+    $flag = password_verify($pass,$db->results[0][1]);
+    if ($flag==1){
+        $db->select('user' , '*' , null , 'user_id =' . $uname1 );
+        $ch=$db->results[0][7];
+        if ($ch=="R"){
+            header('Location: '.'recipientHome.php');
+        }elseif ($ch=="D"){
+            header('Location: '.'donorHome.php');
+        }
+        echo "login successfull";
+    }else{
+        header('Location: '.'login.html');
+    }
+
 
 }
 

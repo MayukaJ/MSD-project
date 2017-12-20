@@ -14,7 +14,7 @@ class Recipient extends User{
         $this->occu=$o;
         $this->pow=$p;
         $this->docPath=$prf;
-        $this->addUser($user,$Name,$pwd,$num,$mail);
+        $this->addUser($user,$Name,$pwd,$num,$mail,'R');
         $DB = new Database();
         $DB->insertInto('user_requester',[$user,$a,$o,$p,$prf]);
     }

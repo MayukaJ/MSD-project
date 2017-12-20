@@ -17,18 +17,18 @@ class User{
     const IMAGE_DIRECTORY ="user_images/";
 
 
-    public function addUser($id,$n,$pw,$p,$mail)
+    public function addUser($id,$n,$pw,$p,$mail,$usertype)
     {
         $this->user_id=$id;
         $this->name=$n;
-        $this->pass=$pw;
+        $this->pass=password_hash($pw, PASSWORD_DEFAULT);
         $this->phone=$p;
         $this->email=$mail;
         $this->dateC=date("Y.m.d");
         $this->type= User::ALLOWED_TYPES[0];
         $this->status="0";
         //$this->photo=$pic;
-        $this->writetoDB('user',$this->user_id,$this->pass,$this->status,$this->dateC,$this->name,$this->phone,$this->email,$this->type);
+        $this->writetoDB('user',$this->user_id,$this->pass,$this->status,$this->dateC,$this->name,$this->phone,$this->email,$usertype);
         //$this->writeAdditional();
     }
 
