@@ -5,6 +5,7 @@
  * Time: 3:03 AM
  */
 
+require_once("DatabaseException.php");
 
 class Database
 {
@@ -39,56 +40,58 @@ class Database
         return true;
     }
 
+    /**
+     * @throws DatabaseException
+     */
     function select($table, $cols = '*', $join = null, $where = null, $group = null, $order = null, $limit = null)
     {
-        $q = 'SELECT '.$cols.' FROM '.$table;
+        $q = 'SELECT ' . $cols . ' FROM ' . $table;
 
-        if($join != null)
-        {
-            $q .= ' JOIN '.$join;
+        if ($join != null) {
+            $q .= ' JOIN ' . $join;
         }
-        if($where != null)
-        {
-            $q .= ' WHERE '.$where;
+        if ($where != null) {
+            $q .= ' WHERE ' . $where;
         }
-        if($group != null)
-        {
-            $q .= ' GROUP BY '.$group;
+        if ($group != null) {
+            $q .= ' GROUP BY ' . $group;
         }
-        if($order != null)
-        {
-            $q .= ' ORDER BY '.$order;
+        if ($order != null) {
+            $q .= ' ORDER BY ' . $order;
         }
-        if($limit != null)
-        {
-            $q .= ' LIMIT '.$limit;
+        if ($limit != null) {
+            $q .= ' LIMIT ' . $limit;
         }
 
-        $this-> res = $this->conn->query($q);
-        $this->makeArray();
+        $this->res = $this->conn->query($q);
 
+        if (!$this->res) {
+            $e = new DatabaseException(__METHOD__, "Invalid SELECT Query", $q);
+            $e->echoDetails();
+            throw $e;
+        } else {
+            $this->makeArray();
+        }
     }
 
+    /**
+     * @throws DatabaseException
+     */
     function makeArray()
     {
-        if(!$this->res) return;
-
         $this->numResults = mysqli_num_rows($this->res);
         $this->fields = $this->res->fetch_fields();               //Array of field objects.
 
         $this->res->data_seek(0);
 
-        for($rowNum=0; $rowNum < $this->numResults; $rowNum++)
-        {
-            $row = mysqli_fetch_array($this->res,MYSQLI_NUM);
+        for ($rowNum = 0; $rowNum < $this->numResults; $rowNum++) {
+            $row = mysqli_fetch_array($this->res, MYSQLI_NUM);
             $this->results[] = $row;
         }
 
-        foreach ($this->fields as $field)
-        {
+        foreach ($this->fields as $field) {
             $this->fieldNames[] = $field->name;
         }
-
     }
 
     /**
@@ -103,57 +106,73 @@ class Database
      */
     function insertInto($table, $values)
     {
-        $testQ = "SELECT count(*) FROM information_schema.columns WHERE table_name = '" .$table. "'";
+
+        $testQ = "SELECT count(*) FROM information_schema.columns WHERE table_name = '" . $table . "'";
         $no_of_columns_in_table = mysqli_query($this->conn, $testQ)->fetch_array(MYSQLI_NUM)[0];
-//        if($no_of_columns_in_table != count($values))
-//        {
-//            echo $no_of_columns_in_table;
-//            echo "</br>";
-//            echo count($values);
-//            echo "No of columns dont match";
-//            return false;
-//        }
 
-        $q = 'INSERT INTO '.$table.' VALUES (';
-
-        foreach($values as $value)
+        if ($no_of_columns_in_table != count($values))
         {
-            if(is_array($value))
-            {
+            throw new DatabaseException(
+                __METHOD__, "No. of columns don't match the number of values", [$no_of_columns_in_table, count($values)], $testQ, ""
+            );
+        }
+
+        $q = 'INSERT INTO ' . $table . ' VALUES (';
+
+        foreach ($values as $value) {
+            if (is_array($value)) {
                 $value = implode(',', $value);
             }
-            if(is_string($value) && $value != 'now()')
-            {
-                $value = "'". $value . "'";
+            if (is_string($value) && $value != 'now()') {
+                $value = "'" . $value . "'";
             }
-            if(is_null($value))
-            {
+            if (is_null($value)) {
                 $value = 'null';
             }
 
             $q .= $value . ", ";
         }
-        $q = substr($q, 0,-2);
+        $q = substr($q, 0, -2);
         $q .= ")";
 
-        return mysqli_query($this->conn, $q);
-
+        if(!mysqli_query($this->conn, $q))
+        {
+            throw new DatabaseException(__METHOD__, "Invalid INSERT INTO query", $q);
+        }
     }
 
+
+    /**
+     * @param $table
+     * @param $condition
+     * @param $columns
+     * @param $values
+     * @throws DatabaseException
+     */
     function update($table, $condition, $columns, $values)
     {
-        if(count($columns) != count($values)) return false;
 
-        $q = 'UPDATE '.$table.' SET ';
+        if (count($columns) != count($values))
+            throw new DatabaseException(
+                __METHOD__, "Number of columns array don't match the number of values", [count($columns), count($values)], '', ''
 
-        for ($i=0; $i< count($columns); $i++)
-        {
-            $q .= $columns[$i] . " = '". $values[$i] . "', ";
+            );
+
+        $q = 'UPDATE ' . $table . ' SET ';
+
+        for ($i = 0; $i < count($columns); $i++) {
+            $q .= $columns[$i] . " = '" . $values[$i] . "', ";
         }
-        $q = substr($q,0,-2);
+        $q = substr($q, 0, -2);
 
         $q .= " WHERE " . $condition;
-        $this-> res = $this->conn->query($q);
+
+        $this->res = $this->conn->query($q);
+
+        if(! $this->res)
+            throw new DatabaseException(
+                __METHOD__, "Invalid UPDATE query", $q, ""
+            );
 
     }
 
@@ -162,31 +181,61 @@ class Database
      * query in THIS database object.
      * Returns false if column array length doesn't match results.
      * @param $columnTitles
+     * @param array $skipCols
+     * @param null $whoObject
+     * @param array $objectArray
+     * @param bool $isButton
+     * @param string $buttonName
+     * @param string $buttonTitle
+     * @param string $actionpath
      * @return bool
+     * @throws DatabaseException
      */
-    function makeTable($columnTitles)
+    function makeTable($columnTitles, $skipCols = [], $whoObject = null, $objectArray = [], bool $isButton = false, $buttonName = "submit", string $buttonTitle = "", string $actionpath = "")
     {
-        if(count($columnTitles) != count($this->fieldNames))   //If number of columns doest match restults
+        $noColsGiven = count($columnTitles);
+        $noColsInResult = count($this->fieldNames);
+        $noColsToSkip = count($skipCols);
+
+        if($isButton)
+            $isValid = $noColsGiven != ($noColsInResult -$noColsToSkip + 1);
+        else
+            $isValid = $noColsGiven != ($noColsInResult -$noColsToSkip);
+
+        if($isValid)   //If number of columns doest match results
         {
-            return false;
+            throw new DatabaseException(
+                __METHOD__, "Number of columns in table doesn't match data obtained from database",
+                [$noColsGiven, $noColsInResult, $noColsToSkip],
+                "", ""
+            );
         }
 
         echo "<table><tr>";                     //Start the table
-
         foreach ($columnTitles as $column)           //Add Column Titles
         {
             echo "<th>" . $column . "</th>";
         }
-
         echo "</tr>";                           //End the title row
 
-        foreach ($this->results as $row)        //Adding rows one by one
+        for ($rowNum = 0; $rowNum< count($this->results); $rowNum++)        //Adding rows one by one
         {
             echo "<tr>";
-            foreach($row as $item)
+            for($colNum = 0; $colNum < count($this->results[$rowNum]) ; $colNum++)
             {
-                echo "<td>" . $item . "</td>";
+                if(in_array($colNum, $skipCols)) continue;
+                echo "<td>" . $this->results[$rowNum][$colNum] . "</td>";
             }
+            if($isButton)
+            {
+                echo "<td><form action = \" " . $actionpath . " \" method = \"post\">";
+                echo "<input type=\"submit\" name=\"" . $buttonName ."\" value=\"" . $buttonTitle . "\">";
+                echo "<input type=\"hidden\" name=\"whoObject\" value=\"" . base64_encode(serialize($whoObject)) . "\"/></td>";
+                echo "<input type=\"hidden\" name=\"selectedObject\" value=\"" . base64_encode(serialize($objectArray[$rowNum])) . "\"/></td>";
+                echo "</form>";
+
+            }
+
             echo "</tr>";
         }
         echo "</table>";
@@ -218,6 +267,7 @@ class Database
      * @param $finalDir
      * @param $name
      * @return bool|string
+     * @throws DatabaseException
      */
     public static function uploadImage($finalDir, $name)
     {
@@ -225,27 +275,27 @@ class Database
         {
             $file = $_FILES['fileToUpload'];
 
-            foreach($file as $key => $value) {
-                echo "$key is at $value";
-                echo "<br><br>";
-            }
+            $contents_of_file_array = "File Array Contains: ".urldecode(http_build_query($file,'',', '));
 
             //1. Validate file size. Maximum 2MB
             if($file['size'] > 2000000)
             {
-                echo "File Bigger than 2 MB";
-                return false;
+                throw new DatabaseException(
+                    __METHOD__, "Sorry. Your file is bigger than 2 MB", [$file['size'], $contents_of_file_array], '', ''
+                );
             }
+
             //2. Validate File Type
             $fileType = explode("/", $file["type"])[0];
             if($fileType != "image")
             {
-                echo "Not an Image but ".$fileType;
-                return false;
+                throw new DatabaseException(
+                    __METHOD__, "Sorry. Your file is not an image.", [$fileType, $contents_of_file_array], '', ''
+                );
             }
+
             switch ($file["error"])
             {
-
                 case UPLOAD_ERR_OK:
 
                     $target = $finalDir;
@@ -260,16 +310,19 @@ class Database
                         rename($oldTarget, $target);
 
                         return $target;
-
-                    } else {
-                        echo "Error Uploading";
-                        return false;
+                    }
+                    else
+                    {
+                        throw new DatabaseException(
+                            __METHOD__, "Error Uploading. Cannot move the temp file.", [$file['tmp_name'], $target, $contents_of_file_array], '', ''
+                        );
                     }
                     break;
-
+                default:
+                    throw new DatabaseException(
+                        __METHOD__, "Error uploading. Error parameter is not OK", [$file["error"], $contents_of_file_array], '', ''
+                    );
             }
-
         }
-
     }
 }

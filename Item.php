@@ -6,6 +6,7 @@
  */
 
 require_once("Database.php");
+require_once ("ItemException.php");
 
 class Item
 {
@@ -58,20 +59,38 @@ class Item
 
     public function makeFromForm($title, $description, $donor_id, $category)
     {
-        if (!$this->validateItem($title, $description, $donor_id, $category)) {
-            return false;
+        try
+        {
+            $this->validateItem($title, $description, $donor_id, $category);
+
+            $this->item_id = self::makeItemID();
+            $this->status = 'advertised';
+
+            // Upload Image & Get the path
+            $this->photoPath = $this->uploadItemImage();
+
+            return $this->writeToDB();
         }
-        $this->item_id = self::makeItemID();
-        $this->status = 'advertised';
-
-        // Upload Image & Get the path
-        $this->photoPath = $this->uploadItemImage();
-        if(!$this->photoPath) return false;
-
-        return $this->writeToDB();
+        catch (ItemException $e)
+        {
+            $e->echoDetails();
+            echo "Cannot create item";
+        }
+        catch (DatabaseException $e)
+        {
+            echo "Error Writing to database";
+            $e->echoDetails();
+        }
 
     }
 
+    /**
+     * @param $title
+     * @param $description
+     * @param $donor_id
+     * @param $category
+     * @throws ItemException
+     */
     public function validateItem($title, $description, $donor_id, $category)
     {
         // 1. CLEAN UP the Title
@@ -79,13 +98,15 @@ class Item
         $this->description = $description;
 
         if (strlen($this->title) > 20) {
-            echo "Title Too long";
-            return false;
+            throw new ItemException(
+                __METHOD__, "Title too long: Title should be less than 20 characters in length."
+            );
         }
 
         if (strlen($this->description) > 255) {
-            echo "Description Too long";
-            return false;
+            throw new ItemException(
+                __METHOD__, "Description too long: Description should be less than 255 characters in length."
+            );
         }
 
         // 2. CLEAN UP the category and check if it is valid. If not return false
@@ -93,42 +114,32 @@ class Item
         $this->category = strtolower(preg_replace("/[^a-zA-Z]/", "", $category));
 
         if (!in_array($category, self::ALLOWED_CATEGORIES)) {
-            echo "Cat not found";
-            return false;
+            throw new ItemException(
+                __METHOD__, "Invalid Category.", [$category, self::ALLOWED_CATEGORIES]
+            );
         }
-
-//        // 3.  Make Keywords into array. If invalid keyword, return false
-//
-//        $this->keywords = explode(",", $keywords);
-//        for ($i = 0; $i < count($this->keywords); $i++) {
-//            $this->keywords[$i] = preg_replace("/[^A-Za-z0-9?!]/", "", $this->keywords[$i]);
-//            $this->keywords[$i] = strtolower($this->keywords[$i]);
-//
-//            if (!ctype_alpha($this->keywords[$i]) || strlen($this->keywords[$i]) == 0)       //Remove from keywords if not suitable
-//            {
-//                echo "here";
-//                unset($this->keywords[$i]);
-//            }
-//        }
-//        array_values($this->keywords);
-//        if (count($this->keywords) == 0) {
-//            echo "Invalid Keywords";
-//            return false;
-//        }
-
         // 4. Validate donorID
         $this->donor_id = trim(strtolower($donor_id));
 
-        $db = new Database();
-        $db->select("donor", 'COUNT(user_id)', null, "user_id = '" . $this->donor_id . "'");
-        if ($db->results[0][0] != 1) {
-            echo "Donor doesn't exist";
-            return false;
+        try {
+            $db = new Database();
+            $db->select("donor", 'COUNT(user_id)', null, "user_id = '" . $this->donor_id . "'");
+            if ($db->results[0][0] != 1) {
+                throw new ItemException(
+                    __METHOD__, "Donor doesn't exist", [$donor_id]
+                );
+            }
         }
-
-        return true;
+        catch (DatabaseException $e)
+        {
+            $e->echoDetails();
+        }
     }
 
+    /**
+     * @return bool|mysqli_result
+     * @throws DatabaseException
+     */
     public function writeToDB()
     {
         $db = new Database();
@@ -140,44 +151,78 @@ class Item
      * Returns array of 10 or less objects
      * @param $category
      * @param $keywordString
+     * @param Database $db
      * @return array
      */
-    public static function returnAvailItems($category, $keywordString)
+    public static function returnAvailItems($category, $keywordString, Database $db)
     {
-        $db = new Database();
-        $db->select('item', '*', null,
-            Database::makeQueryForViewItems($category,$keywordString),
-            null,null,self::MAX_NO_VIEW);
-
-        $itemsList = array();
-
-        foreach($db->results as $row)
+        try
         {
-            array_push($itemsList, new Item(
-                $row[0], $row[1],$row[2],$row[3],$row[4], $row[5],$row[6],$row[7],$row[8]
-            ));
+            $db->select('item', '*', null,
+                Database::makeQueryForViewItems($category, $keywordString),
+                null, null, self::MAX_NO_VIEW);
 
+            $itemsList = array();
+
+            foreach ($db->results as $row) {
+                array_push($itemsList, new Item(
+                    $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8]
+                ));
+            }
+            return $itemsList;
         }
-        return $itemsList;
+        catch (DatabaseException $e)
+        {
+            $e->echoDetails();
+        }
+        catch (Exception $e)
+        {
+            echo "Exception in method ". __METHOD__;
+        }
     }
 
+    /**
+     * @return int
+     */
     static function makeItemID()
     {
-        $db = new Database();
-        $db->select("item", 'MAX(item_id)');
+        try
+        {
+            $db = new Database();
+            $db->select("item", 'MAX(item_id)');
 
-        if ($db->numResults == 0 || $db->results[0][0] == null)
-        {
-            return 1;
+            if ($db->numResults == 0 || $db->results[0][0] == null)
+            {
+                return 1;
+            }
+            else
+            {
+                return (int)$db->results[0][0] + 1;
+            }
         }
-        else
+        catch (DatabaseException $e)
         {
-            return (int)$db->results[0][0] + 1;
+            $e->echoDetails();
+        }
+        catch (Exception $e)
+        {
+            echo "Exception in method ". __METHOD__;
         }
     }
 
     public function uploadItemImage()
     {
-        return Database::uploadImage(self::IMAGE_DIRECTORY, $this->item_id);
+        try
+        {
+            return Database::uploadImage(self::IMAGE_DIRECTORY, $this->item_id);
+        }
+        catch (DatabaseException $e)
+        {
+            $e->echoDetails();
+        }
+        catch (Exception $e)
+        {
+            echo "Exception in method ". __METHOD__;
+        }
     }
 }
