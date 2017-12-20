@@ -7,24 +7,60 @@
 </head>
 <body>
 <header>
-<h3>What do you want?</h3>
+    <h3>What do you want?</h3>
 </header>
-<select id="selectedCategory">
-    <option value="null">Select Category...</option>
-    <option value="cat1">cat1</option>
-    <option value="cat2">Opel</option>
-    <option value="cat2">Audi</option>
-</select>
-<input type="submit" value="Search" name="search">
-<h4>Following items are available in //category//</h4>
+<form action="requestItem.php" method="get">
+    <select name="category" id="selectedCategory">
+        <option value="null">Select Category...</option>
+        <option value="clothes">Clothes</option>
+        <option value="books">Books/Educational</option>
+        <option value="shoes">Shoes</option>
+        <option value="sports">Sports Equipment</option>
+        <option value="electronic">Electronic appliances</option>
+        <option value="music">Musical/Aesthetic Equipment</option>
+        <option value="furniture">Furniture items</option>
+    </select>
+    <input type="text" placeholder="Enter keywords" name="keywordString">
+    <input type="hidden" name="requested" value="true">
+    <input type="submit" name="search" value="Search">
 
-<?php
-require_once("Database.php");
-require_once("Item.php");
 
-$db = new Database();
-$db->select('user', '*');
-$db->makeTable(['User ID', 'PWD', 'name', 'add', 'phone', 'email']);
-?>
+</form>
+
+</div>
 </body>
 </html>
+
+<?php
+
+require_once('Item.php');
+require_once('Database.php');
+
+$requested = false;
+$category = "";
+$db = new Database();
+
+if (array_key_exists("requested", $_GET)) {
+    $requested = ($_GET["requested"] != "true");
+    echo $category;
+    $category = $_GET['category'];
+    $keywordString = $_GET['keywordString'];
+
+    $itemList = Item::returnAvailItems($category, $keywordString, $db);
+
+
+    echo "<h4>Following items are available in :" . ucwords($category) . "</h4>";
+
+    try {
+        $db->makeTable(
+            ['Item ID', 'Title', 'Description', 'Donor', 'Category', 'Date', 'Request'], [3, 5, 7], null,
+            $itemList, true, 'request', "Request", ""
+        );
+    } catch (DatabaseException $e) {
+        $e->echoDetails();
+    }
+
+}
+
+
+?>
