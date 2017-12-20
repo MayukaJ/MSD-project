@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Review new User | Admin</title>
+    <title>Account operations | Admin</title>
     <link rel="stylesheet" type="text/css" href="css/home.css">
     <link rel="stylesheet" type="text/css" href="css/home.css">
 </head>
@@ -14,6 +14,7 @@
 <a href="adminAcops.php" class="btn">Account operations</a>
 <br><br>
 
+<p>User ID <input type="text" name="trsID"><input type="submit" name="submitACID" value="Search"></p>
 <?php
 require_once("Database.php");
 require_once("Item.php");

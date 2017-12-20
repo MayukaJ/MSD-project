@@ -10,9 +10,9 @@
 <br><br>
 <a href="admintrc.php" class="btn">Transaction details</a>
 <a href="adminAcrev.php" class="btn">Review new Users</a>
-<a href="adminTrc.php" class="btn">Account operations</a>
+<a href="adminAcops.php" class="btn">Account operations</a>
 <br><br>
-<p>Transaction ID<input type="text" name="trsID"><input type="submit" name="submitTID" value="Search"></p>
+<p>Transaction ID <input type="text" name="trsID"><input type="submit" name="submitTID" value="Search"></p>
 <?php
 require_once("Database.php");
 require_once("Item.php");
