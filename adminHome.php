@@ -63,18 +63,43 @@
 
 <div id="trsDtl" class="tabcontent">
     <p>Transaction ID<input type="text" name="trsID"><input type="submit" name="submitTID" value="Search"></p>
-    <p>//table here//</p>
+    <?php
+    require_once("Database.php");
+    require_once("Item.php");
+
+    $db = new Database();
+    $db->select('user', '*');
+    $db->makeTable(['User ID', 'PWD', 'name', 'add', 'phone', 'email']);
+    ?>
+</div>
 </div>
 
 <div id="newAcs" class="tabcontent">
-    <p>//table here</p>
+    <?php
+    require_once("Database.php");
+    require_once("Item.php");
+
+    $db = new Database();
+    $db->select('user', '*');
+    $db->makeTable(['User ID', 'PWD', 'name', 'add', 'phone', 'email']);
+    ?>
+</div>
 </div>
 
 <div id="acOps" class="tabcontent">
     <p>Transaction ID <input type="text" name="trsID"><input type="submit" name="submitACID" value="Search"></p>
-    <p>//table here//</p>
-</div>
+    <?php
+    require_once("Database.php");
+    require_once("Item.php");
 
+    $db = new Database();
+    $db->select('user', '*');
+    $db->makeTable(['User ID', 'PWD', 'name', 'add', 'phone', 'email']);
+    ?>
+</div>
+</div>
+<?php
+$(document).ready(
 <script>
     function openCity(evt, cityName) {
         var i, tabcontent, tablinks;
@@ -90,7 +115,8 @@
         evt.currentTarget.className += " active";
     }
 </script>
-
+);
+?>
 </body>
 </html>
 </body>
