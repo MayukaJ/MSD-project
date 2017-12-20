@@ -29,13 +29,14 @@ class User{
         $this->status="0";
         //$this->photo=$pic;
         $this->writetoDB('user',$this->user_id,$this->pass,$this->status,$this->dateC,$this->name,$this->phone,$this->email,$this->type);
-        $this->writeAdditional();
+        //$this->writeAdditional();
     }
 
     public function writeAdditional(){
         //overriden
     }
 
+    //change
     public function changeType($table,$uname,$type){
         $DB = new Database();
         $uname1 = "'".$uname."'";

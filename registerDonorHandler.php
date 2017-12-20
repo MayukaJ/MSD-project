@@ -9,8 +9,8 @@ $num = $_POST['num'];
 $repwd = $_POST['psw-repeat'];
 
 if(user::validateuser($uname,$mail,$pwd,$repwd)){
-    $new_user = new Donor($uname);
-    $new_user->addUser($uname,$Name,$pwd,$num,$mail);
-    $new_user->changeType('donar',$uname,User::ALLOWED_TYPES[2]); // update the type in user table
+    $new_user = new Donor($uname,$Name,$pwd,$num,$mail);
+
+    //$new_user->changeType('donar',$uname,User::ALLOWED_TYPES[2]); // update the type in user table
 }
 ?>

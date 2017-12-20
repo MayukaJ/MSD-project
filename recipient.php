@@ -3,6 +3,7 @@ include 'User.php';
 
 class Recipient extends User{
 
+    
     public function __construct($user,$a,$o,$p,$prf)
     {
         $DB = new Database();
