@@ -13,8 +13,7 @@ $repwd = $_POST['psw-repeat'];
 $proof = $_POST['proofdoc'];
 
 if(user::validateuser($uname,$mail,$pwd,$repwd)){
-    $new_user = new Recipient($uname,$Age,$Occ,$POW,$proof);
-    $new_user->addUser($uname,$Name,$pwd,$num,$mail);
-    $new_user->changeType('donar',$uname,User::ALLOWED_TYPES[1]); // update the type in user table
+    $new_user = new Recipient($uname,$Name,$pwd,$num,$mail,$Age,$Occ,$POW,$proof);
+    //$new_user->changeType('donar',$uname,User::ALLOWED_TYPES[1]); // update the type in user table
 }
 ?>
