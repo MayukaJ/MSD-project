@@ -12,24 +12,27 @@ class User{
     protected $status;
     protected $dateC;
     protected $type;
+    protected $userType;
     //protected $photo;
-    const ALLOWED_TYPES = array("USER","REQUESTER","DONOR");
-    const IMAGE_DIRECTORY ="user_images/";
+    public const ALLOWED_TYPES = array("USER","REQUESTER","DONOR");
+    public const ALLOWED_STATUSES = array("active","reported","awaiting");
+    public const IMAGE_DIRECTORY ="user_images/";
+    public const DOC_DIRECTORY ="user_docs/";
+    public const MAX_VIEW = 10;
 
 
-    public function addUser($id,$n,$pw,$p,$mail,$usertype)
+
+
+    public function fillUserDetails($id, $n, $pw, $p, $mail, $usertype, $status)
     {
+        $this->userType = $usertype;
         $this->user_id=$id;
         $this->name=$n;
         $this->pass=password_hash($pw, PASSWORD_DEFAULT);
         $this->phone=$p;
         $this->email=$mail;
         $this->dateC=date("Y.m.d");
-        $this->type= User::ALLOWED_TYPES[0];
-        $this->status="0";
-        //$this->photo=$pic;
-        $this->writetoDB('user',$this->user_id,$this->pass,$this->status,$this->dateC,$this->name,$this->phone,$this->email,$usertype);
-        //$this->writeAdditional();
+        $this->status = $status;
     }
 
     public function writeAdditional(){
@@ -45,9 +48,10 @@ class User{
 
     }
 
-    public function writetoDB($table,$id,$pw,$st,$dt,$nme,$phn,$ml,$tp){
+    public function writetoUserDB()
+    {
         $DB = new Database();
-        $DB->insertInto($table,[$id,$pw,$st,$dt,$nme,$phn,$ml,$tp]);
+        $DB->insertInto('user',[$this->user_id,$this->pass,$this->status,'now()',$nme,$phn,$ml,$tp]);
     }
 
     public static function validateuser($uname,$mail,$pwd,$repwd){
@@ -74,7 +78,5 @@ class User{
     }
 
 }
-
-
 
 ?>
