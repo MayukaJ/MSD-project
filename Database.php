@@ -6,9 +6,13 @@
  */
 
 require_once("DatabaseException.php");
+require_once("User.php");
 
 class Database
 {
+   // public const $PROJECT_NAME = "MSD-project";
+
+
     public $conn;
     public $res;
     public $numResults;
@@ -20,6 +24,17 @@ class Database
     private $username = "root";
     private $pwd = "";
     private $dbname = "donatelk";
+
+
+    //TABLES
+
+    //ITEM  	item_id title   description     photo_path  donor_id    requestor_id    category    status  date_submitted
+    //REQUEST   request_id	    requester_id	item_id
+
+
+    //USER      user_id	        pwd	    status	date_created	name	address	phone	email	type	nic
+    //USER_REQUESTER  user_id   age     occupation              place of work   salary  proofdoc    summary
+    //DONOR     user_id	rating
 
 
     /**
@@ -107,8 +122,8 @@ class Database
     function insertInto($table, $values)
     {
 
-        $testQ = "SELECT count(*) FROM information_schema.columns WHERE table_name = '" . $table . "'";
-        $no_of_columns_in_table = mysqli_query($this->conn, $testQ)->fetch_array(MYSQLI_NUM)[0];
+        $testQ = "SELECT count(*) FROM information_schema.columns WHERE table_name = '$table' AND table_schema = '$this->dbname'";
+        $no_of_columns_in_table = (string)mysqli_query($this->conn, $testQ)->fetch_array(MYSQLI_NUM)[0];
 
         if ($no_of_columns_in_table != count($values))
         {
@@ -176,6 +191,21 @@ class Database
 
     }
 
+    function delete($table, $condition)
+    {
+        $q = 'DELETE FROM ' . $table;
+        $q .= " WHERE " . $condition;
+
+        $this->res = $this->conn->query($q);
+
+        if(! $this->res)
+            throw new DatabaseException(
+                __METHOD__, "Invalid DELETE query", $q, ""
+            );
+    }
+
+
+
     /**
      * makeTable creates a table using the column titles given as array and using the result obtained from select
      * query in THIS database object.
@@ -230,9 +260,11 @@ class Database
             {
                 echo "<td><form action = \" " . $actionpath . " \" method = \"post\">";
                 echo "<input type=\"submit\" name=\"" . $buttonName ."\" value=\"" . $buttonTitle . "\">";
-                echo "<input type=\"hidden\" name=\"whoObject\" value=\"" . base64_encode(serialize($whoObject)) . "\"/></td>";
-                echo "<input type=\"hidden\" name=\"selectedObject\" value=\"" . base64_encode(serialize($objectArray[$rowNum])) . "\"/></td>";
-                echo "</form>";
+                echo "<input type=\"hidden\" name=\"whoObject\" value=\"" . base64_encode(serialize($whoObject)) . "\"/>";
+                echo "<input type=\"hidden\" name=\"selectedObject\" value=\"" . base64_encode(serialize($objectArray[$rowNum])) . "\"/>";
+                echo "</td></form>";
+
+
 
             }
 
@@ -269,7 +301,7 @@ class Database
      * @return bool|string
      * @throws DatabaseException
      */
-    public static function uploadImage($finalDir, $name)
+    public static function uploadImage($finalDir, $name, $isImage = false)
     {
         if (!empty($_FILES) && isset($_FILES['fileToUpload']))
         {
@@ -287,7 +319,7 @@ class Database
 
             //2. Validate File Type
             $fileType = explode("/", $file["type"])[0];
-            if($fileType != "image")
+            if($isImage && ($fileType != "image"))
             {
                 throw new DatabaseException(
                     __METHOD__, "Sorry. Your file is not an image.", [$fileType, $contents_of_file_array], '', ''
@@ -306,7 +338,7 @@ class Database
                         //echo $target;
                         echo "<br><br>";
                         $oldTarget = $target;
-                        $target = "item_images/".$name.".".pathinfo($target)["extension"];
+                        $target = $finalDir.$name.".".pathinfo($target)["extension"];
                         rename($oldTarget, $target);
 
                         return $target;
@@ -324,5 +356,26 @@ class Database
                     );
             }
         }
+    }
+
+
+    public function insertInto_user(string $user_id, string $pwd, string $status, string $date_created, string $name, string $address, string $phone, string $email, string $type, string $nic)
+    {
+
+        try {
+            if (!in_array($type, user::ALLOWED_TYPES))
+                throw new DatabaseException(__METHOD__, "The user type you entered must be a member of array ALLOWED_TYPES of user class",
+                    [$type, implode(" , ", user::ALLOWED_TYPES)]);
+
+            if (!in_array($status, user::ALLOWED_STATUSES))
+                throw new DatabaseException(__METHOD__, "The user status you entered must be a member of array ALLOWED_STATUSES of user class",
+                    [$status, implode(" , ", user::ALLOWED_STATUSES)]);
+
+            $this->insertInto("user", [$user_id,$pwd,$status,$date_created,$name,$address,$phone,$email, $type, $nic]);
+        } catch (DatabaseException $e)
+        {
+            $e->echoDetails();
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 <?php
 include_once "Database.php";
-include_once "donor.php";
+include_once "Donor.php";
 $db = new Database();
 $user = $_POST["un"];
 $pass = $_POST["pw"];

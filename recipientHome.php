@@ -30,7 +30,7 @@
         <br>
         <br>
         <div>
-            <a href="requestItem.php" class="btn">Request New Item</a>
+            <a href="requestItem.html" class="btn">Request New Item</a>
         </div>
     </tr>
 </table>

@@ -57,7 +57,7 @@ class DatabaseException extends Exception
             echo "<br><br>" . "Stack Trace:   " . $this->stackTrace;
 
         if(count($this->details) != 0)
-            echo "<br><br>" . "Details:   " . implode(' | ',$this->details);
+            echo "<br><br>" . "Details:   " . @implode(' | ',$this->details);
 
         echo "<br><br>";
     }

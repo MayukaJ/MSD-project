@@ -225,4 +225,55 @@ class Item
             echo "Exception in method ". __METHOD__;
         }
     }
+
+
+
+
+    public function getItemId()
+    {
+        return $this->item_id;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function getDonorId()
+    {
+        return $this->donor_id;
+    }
+
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    public function getPhotoPath()
+    {
+        return $this->photoPath;
+    }
+
+    public function getRequesterId()
+    {
+        return $this->requester_id;
+    }
+
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+
+
 }

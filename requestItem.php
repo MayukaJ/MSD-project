@@ -1,16 +1,13 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Request new Item</title>
-    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="css/addItem.css">
 </head>
 <body>
-<header>
+<form class="form2" action = "requestItem.php" method = "get" >
     <h3>What do you want?</h3>
-</header>
-<form action="requestItem.php" method="get">
-    <select name="category" id="selectedCategory">
+    <select name = "category" id="selectedCategory">
         <option value="null">Select Category...</option>
         <option value="clothes">Clothes</option>
         <option value="books">Books/Educational</option>
@@ -24,7 +21,6 @@
     <input type="hidden" name="requested" value="true">
     <input type="submit" name="search" value="Search">
 
-
 </form>
 
 </div>
@@ -33,14 +29,15 @@
 
 <?php
 
-require_once('Item.php');
-require_once('Database.php');
+require_once ('Item.php');
+require_once ('Database.php');
 
 $requested = false;
 $category = "";
 $db = new Database();
 
-if (array_key_exists("requested", $_GET)) {
+if(array_key_exists("requested",$_GET))
+{
     $requested = ($_GET["requested"] != "true");
     echo $category;
     $category = $_GET['category'];
@@ -49,13 +46,14 @@ if (array_key_exists("requested", $_GET)) {
     $itemList = Item::returnAvailItems($category, $keywordString, $db);
 
 
-    echo "<h4>Following items are available in " . ucwords($category) . "</h4>";
+    echo "<h4>Following items are available in :" . ucwords($category ). "</h4>";
 
-    try {
+    try
+    {
         $db->makeTable(
-            ['Item ID', 'Title', 'Description', 'Donor', 'Category', 'Date', 'Request'], [3, 5, 7], null,
-            $itemList, true, 'request', "Request", ""
-        );
+        ['Item ID', 'Title', 'Description', 'Donor', 'Category', 'Date', 'Request'], [3, 5, 7], null,
+        $itemList, true, 'request', "Request", ""
+    );
     } catch (DatabaseException $e) {
         $e->echoDetails();
     }
