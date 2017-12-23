@@ -3,31 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Request new Item</title>
-    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="css/requestItem.css">
 </head>
 <body>
-<header>
-    <h3>What do you want?</h3>
-</header>
-<form action="requestItem.php" method="get">
-    <select name="category" id="selectedCategory">
-        <option value="null">Select Category...</option>
-        <option value="clothes">Clothes</option>
-        <option value="books">Books/Educational</option>
-        <option value="shoes">Shoes</option>
-        <option value="sports">Sports Equipment</option>
-        <option value="electronic">Electronic appliances</option>
-        <option value="music">Musical/Aesthetic Equipment</option>
-        <option value="furniture">Furniture items</option>
-    </select>
-    <input type="text" placeholder="Enter keywords" name="keywordString">
-    <input type="hidden" name="requested" value="true">
-    <input type="submit" name="search" value="Search">
 
+<div class="topnav">
+    <form action="requestItem.php" method="get">
+<table>
+    <tr>
+        <td>
+        <h2>What do you want?</h2>
+        </td>
+        <td>
+<div>
+        <select name="category" id="selectedCategory">
+            <option value="null">Select Category...</option>
+            <option value="clothes">Clothes</option>
+            <option value="books">Books/Educational</option>
+            <option value="shoes">Shoes</option>
+            <option value="sports">Sports Equipment</option>
+            <option value="electronic">Electronic appliances</option>
+            <option value="music">Musical/Aesthetic Equipment</option>
+            <option value="furniture">Furniture items</option>
+        </select>
 
-</form>
-
+        <input type="text" placeholder="Enter keywords" name="keywordString">
+        <input type="submit" name="search" value="Search">
+        <input type="hidden" name="requested" value="true">
 </div>
+        </td>
+    </tr>
+</table>
+    </form>
+</div>
+
 </body>
 </html>
 
@@ -49,7 +58,7 @@ if (array_key_exists("requested", $_GET)) {
     $itemList = Item::returnAvailItems($category, $keywordString, $db);
 
 
-    echo "<h4>Following items are available in " . ucwords($category) . "</h4>";
+    echo "<h3>Following items are available in " . ucwords($category) . "</h3>";
 
     try {
         $db->makeTable(

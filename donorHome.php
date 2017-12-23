@@ -55,7 +55,7 @@
     <br>
     <tr>
         <div>
-            <a href="requestItem.php" class="btn">Add New Item</a>
+            <a href="addItem.html" class="btn">Add New Item</a>
         </div>
     </tr>
     <tr>

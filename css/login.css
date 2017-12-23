@@ -1,18 +1,17 @@
 header{
     background-color: #2e6da4;
     width: 100vw;
-    height: 18vh;
+    height: 15vh;
 
 }
 
 .btn{padding: 15px;
 
-    background-color: orangered;
     width:500px;
     height:70px;
     text-decoration: none;
     font-weight: 500;
-    border-radius: 20px;
+    border: 2px white;
     color: white;
 }
 
@@ -30,4 +29,34 @@ header{
 
 #loginForm{
     float: right;
+}
+
+input[type=submit]{
+    float: left;
+    padding: 8px 12px;
+    margin: 8px 0 0;
+    font-family: 'Montserrat', sans-serif;
+    border: 2px solid white;
+    background: 0;
+    color: white;
+    cursor: pointer;
+    transition: all .3s
+}
+
+input[type=text] {
+    float: left;
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+}
+
+input[type=password] {
+    float: left;
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
 }
