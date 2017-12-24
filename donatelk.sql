@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2017 at 10:53 AM
+-- Generation Time: Dec 20, 2017 at 11:24 AM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.1.12
 
@@ -38,10 +38,13 @@ CREATE TABLE `donor` (
 --
 
 INSERT INTO `donor` (`user_id`, `rating`) VALUES
-('aba111', 4),
-('aba123', 5),
-('aba243', 1),
-('aba856', 4);
+('aba', 0),
+('check', 0),
+('fff', 0),
+('fuckth', 0),
+('fuuuu', 0),
+('rashra', 0),
+('rui', 0);
 
 -- --------------------------------------------------------
 
@@ -81,19 +84,30 @@ CREATE TABLE `request` (
 
 CREATE TABLE `user` (
   `user_id` varchar(6) NOT NULL,
-  `pwd` varchar(10) NOT NULL,
+  `pwd` varchar(255) NOT NULL,
+  `status` char(1) NOT NULL,
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `name` varchar(20) NOT NULL,
-  `address` text NOT NULL,
   `phone` varchar(12) NOT NULL,
-  `email` varchar(50) NOT NULL
+  `email` varchar(50) NOT NULL,
+  `type` char(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `pwd`, `name`, `address`, `phone`, `email`) VALUES
-('dasdad', '$2y$10$X01', 'asdasdasd', 'radasdasdasdasd', '077452', 'dasdss@h.c');
+INSERT INTO `user` (`user_id`, `pwd`, `status`, `date_created`, `name`, `phone`, `email`, `type`) VALUES
+('aaabba', 'aaa', '0', '2017-12-19 18:30:00', 'abaaba', '4485', 'a@k.v', 'U'),
+('aba', 'aaa', '0', '2017-12-19 18:30:00', 'aba', 'aaa', 'a@k.v', 'U'),
+('check', '$2y$10$5/l6iSuRfIr.p/EPAoplXeY4BqbaptVjA.k.uAV89AH1eoe0ZBXFq', '0', '2017-12-19 18:30:00', 'check', '77', 'rashmin.ravindu@gmail.com', 'D'),
+('fuckth', '$2y$10$cTni783dixLjeshqcyDdIOCUR4eo2xwzkTiUwg3WU74bqar6S2zJa', '0', '2017-12-19 18:30:00', 'rashmin', '44', 'r@l.v', 'U'),
+('fuuuu', '3344', '0', '2017-12-19 18:30:00', 'asda', '3344', 'f@l.c', 'U'),
+('push', 'aaa', '0', '2017-12-19 18:30:00', 'rashmin', '4563', 's@k.c', 'U'),
+('rashra', '$2y$10$Lk5n9Xzs5ATSHK4aeztpRe/FAXZQwSbUBv.kE3jU4XXfKQ4oaI/fK', '0', '2017-12-19 18:30:00', 'rashmin', '0771', 'd@k.c', 'U'),
+('rio', '$2y$10$W6wB7adPmtrcXaTPfvsnZ.N2BiZMe8Wl.frS0zR3GThYP/pyCoxUu', '0', '2017-12-19 18:30:00', 'rio', '125', 'f@l.v', 'R'),
+('rui', '$2y$10$P78NZZGQ/KyZJXi19HlcPuQbIphlz6J8fcxh8E4OK8cwYSr2kFLgq', '0', '2017-12-19 18:30:00', 'rui', 'aa', 'ra@k.c', 'D'),
+('suck', '$2y$10$X6R3fWyxKjLQ.27TyfULN.TU4mPGr3qWeE3N9Lbtzz7wyKUl7G/6m', '0', '2017-12-19 18:30:00', 'check', 'dd', 'd@l.v', 'R');
 
 -- --------------------------------------------------------
 
@@ -103,11 +117,21 @@ INSERT INTO `user` (`user_id`, `pwd`, `name`, `address`, `phone`, `email`) VALUE
 
 CREATE TABLE `user_requester` (
   `user_id` varchar(6) NOT NULL,
-  `salary` varchar(10) NOT NULL,
-  `document` int(50) NOT NULL,
-  `job` int(10) NOT NULL,
-  `summery` mediumtext NOT NULL
+  `age` varchar(10) NOT NULL,
+  `occupation` varchar(50) NOT NULL,
+  `place of work` varchar(50) NOT NULL,
+  `proofdoc` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user_requester`
+--
+
+INSERT INTO `user_requester` (`user_id`, `age`, `occupation`, `place of work`, `proofdoc`) VALUES
+('aaabba', '48', 'aaa', 'aaa', 'test.php'),
+('push', '45', 'sss', 'sss', 'dbTest.php.txt'),
+('rio', '78', 'fu', 'fu', 'test.php'),
+('suck', '77', 'occu', 'oo', 'test.php');
 
 --
 -- Indexes for dumped tables
