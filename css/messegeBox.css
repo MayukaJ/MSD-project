@@ -25,7 +25,8 @@ h2, h3, h4 {
 .btn{
     color: #222222;
     text-decoration: white;
-    float: left;
+    width: 100%;
+    float: right;
     padding: 10px;
     box-sizing: border-box;
     background: none;

@@ -10,6 +10,16 @@ $status = $request->item->getStatus();
 
 $request_id = $request->getRequestId();
 
+echo "
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>Status</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/messegeBox.css\">
+</head>
+<body>
+<form class='form'><h3>
+ ";
 
 if($status == 'advertised')
 {
@@ -21,3 +31,8 @@ else
 {
     echo "Request has been accepted by donor. Accepted requests cannot be cancelled";
 }
+
+echo "</h3>
+<a href=\"recipientHome.php\" class=\"btn\">Go Back</a>
+</form></body></html>
+";

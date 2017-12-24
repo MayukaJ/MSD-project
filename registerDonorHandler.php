@@ -20,3 +20,16 @@ if(user::validateuser($user_id,$email,$pwd,$repeat_pwd))
 
 
 
+echo "
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>Request status</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/messegeBox.css\">
+</head>
+<body>
+<form class='form'>
+<h3>Register Success</h3>
+<a href=\"index.html\" class=\"btn\">Go Back</a>
+</form></body></html>
+";

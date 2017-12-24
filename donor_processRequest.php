@@ -43,3 +43,17 @@ else{
         $item->changeStatusTo(Item::ALLOWED_STATUSES[4]);
     }
 }
+
+echo "
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>Success</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/messegeBox.css\">
+</head>
+<body>
+<form class='form'>
+<h3>Success</h3>
+<a href=\"donorHome.php\" class=\"btn\">Go Back</a>
+</form></body></html>
+";
