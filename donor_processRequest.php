@@ -32,4 +32,14 @@ else{
     {
         $item->changeStatusTo(Item::ALLOWED_STATUSES[2]);
     }
+
+
+    elseif (isset($_POST['receive']))
+    {
+        $item->changeStatusTo(Item::ALLOWED_STATUSES[3]);
+    }
+    elseif (isset($_POST['sent']))
+    {
+        $item->changeStatusTo(Item::ALLOWED_STATUSES[4]);
+    }
 }
