@@ -4,12 +4,29 @@ require_once ("Recipient.php");
 require_once ("Request.php");
 require_once ("Item.php");
 
+
 try
 {
     $db = new Database();
 
     $status = Recipient::ALLOWED_STATUSES[2];
     $userList = Recipient::returnList($db, $status);
+
+    echo "
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>Home | Admin</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/home.css\">
+</head>
+<body>
+<header>
+            <h2>Welcome ";
+echo $name;
+
+echo "</h2>
+        </header>";
+
 
     echo "<h4>Sent Items to be Received</h4>";
 
@@ -46,7 +63,7 @@ try
         ["user_id", "date_created", "name", "phone", "email", "age", "salary" ], [1,2,5,7,8,9,12,13,15,16,17], null,
         $userList, true, 'details', "FullDetails", "admin_viewUserDetails.php"
     );
-
+echo "</body>";
 
 
 } catch (DatabaseException $e) {

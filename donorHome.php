@@ -36,9 +36,8 @@ echo "</h2>
 ";
 
 echo "<center><br><br>
-    <div>
         <a href=\"addItem.php\" class=\"btn\">Donate New Item</a>
-    </div><br><div></center>
+<br><br><br><div></center>
             <h4>Requests awaiting approval for your items</h4>
 ";
 

@@ -11,6 +11,17 @@ session_start();
 $user = $_SESSION['user'];
 $item = unserialize(base64_decode($_POST["selectedObject"]));
 
+echo "
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>Add new Item</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/messegeBox.css\">
+</head>
+<body>
+<form class='form'>
+<h3>
+";
 
 $user_id = $user->getUserId();
 $item_id = $item->getItemId();
@@ -39,3 +50,8 @@ else
     $request->addToDB();
     echo "You have now requested the item: $itemTitle";
 }
+echo "
+</h3>
+<a href=\"recipientHome.php\" class=\"btn\">Go Back</a>
+</form></body></html>
+";
