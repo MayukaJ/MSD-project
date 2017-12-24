@@ -1,0 +1,18 @@
+   public static function viewAvailItems($category, $keywordString)
+    {
+        $db = new Database();
+        $db->select('item', '*', null,
+            Database::makeQueryForViewItems($category,$keywordString),
+            null,null,self::MAX_NO_VIEW);
+
+        $itemsList = array();
+
+        foreach($db->results as $row)
+        {
+            array_push($itemsList, new Item(
+                $row[0], $row[1],$row[2],$row[3],$row[4], $row[5],$row[6],$row[7],$row[8], $row[9]
+            ));
+
+        }
+        return $itemsList;
+    }
