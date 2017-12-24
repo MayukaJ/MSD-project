@@ -12,10 +12,18 @@ $request = unserialize(base64_decode($_POST["selectedObject"]));
 $item = $request->item;
 $requester = $request->user;
 
+echo "
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>Admin | View Item Request</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/viewRequest.css\">
+</head>
+<body>
+<form class='form'>
+ ";
 
-echo "Request Details";
-echo "<br><br>";
-
+echo "<h3>Request Details</h3>";
 echo "Request ID\t:\t" . $request->getRequestId();
 echo "<br>";
 echo "Item ID\t:\t" . $item->getItemId();
@@ -30,10 +38,7 @@ echo "Item Status\t:\t" . $item->getStatus();
 echo "<br>";
 echo "Date Item Submitted\t:\t" . $item->getDateSubmitted();
 
-echo "<br><br><br>";
-
-echo "Requester Details";
-echo "<br><br>";
+echo "<h3>Requester Details</h3>";
 
 echo "Requester's ID\t:\t" . $requester->getUserId();
 echo "<br>";

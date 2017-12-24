@@ -15,7 +15,7 @@ echo "
 <html lang=\"en\">
 <head>
     <meta charset=\"UTF-8\">
-    <title>Add new Item</title>
+    <title>Request status</title>
     <link rel=\"stylesheet\" type=\"text/css\" href=\"css/messegeBox.css\">
 </head>
 <body>

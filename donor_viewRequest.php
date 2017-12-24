@@ -14,9 +14,18 @@ $request = unserialize(base64_decode($_POST["selectedObject"]));
 $item = $request->item;
 $requester = $request->user;
 
+echo "
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>Donor | View Item Request</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/viewRequest.css\">
+</head>
+<body>
+<form class='form'>
+ ";
 
-echo "Request Details";
-echo "<br><br>";
+echo "<h3>Request Details</h3>";
 
 echo "Request ID\t:\t" . $request->getRequestId();
 echo "<br>";
@@ -32,10 +41,7 @@ echo "Item Status\t:\t" . $item->getStatus();
 echo "<br>";
 echo "Date Item Submitted\t:\t" . $item->getDateSubmitted();
 
-echo "<br><br><br>";
-
-echo "Requester Details";
-echo "<br><br>";
+echo "<h3>Requester Details</h3>";
 
 echo "Requester's ID\t:\t" . $requester->getUserId();
 echo "<br>";
@@ -44,7 +50,7 @@ echo "<br>";
 echo "<br>";
 
 echo "<td><form action = \"donor_processRequest.php" . " \" method = \"post\">";
-echo "<input type=\"submit\" name=\"accept\" value=\"Accept Request\">";
+echo "<input type=\"submit\" name=\"accept\" value=\"Accept Request\" >";
 echo "<input type=\"submit\" name=\"reject\" value=\"Reject Request\">";
 echo "<input type=\"submit\" name=\"report\" value=\"Report Requester\">";
 echo "<input type=\"submit\" name=\"send\" value=\"Mark Item as Sent\">";

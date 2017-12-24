@@ -2,11 +2,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Request new Item</title>
-    <link rel="stylesheet" type="text/css" href="css/addItem.css">
+    <link rel="stylesheet" type="text/css" href="css/requestItem.css">
 </head>
 <body>
-<form class="form2" action = "requestItem.php" method = "get" >
-    <h3>What do you want?</h3>
+<form class="topnav" action = "requestItem.php" method = "get" >
+    <table>
+        <tr><td>
+    <h2>What do you want?</h2>
+            </td><td>
     <select name = "category" id="selectedCategory">
         <option value="null">Select Category...</option>
         <option value="clothes">Clothes</option>
@@ -20,7 +23,8 @@
     <input type="text" placeholder="Enter keywords" name="keywordString">
     <input type="hidden" name="requested" value="true">
     <input type="submit" name="search" value="Search">
-
+            </td></tr>
+    </table>
 </form>
 
 </div>
@@ -46,7 +50,7 @@ if(array_key_exists("requested",$_GET))
     $itemList = Item::returnAvailItems($category, $keywordString, $db);
 
 
-    echo "<h4>Following items are available in :" . ucwords($category ). "</h4>";
+    echo "<h3>Following items are available in :" . ucwords($category ). "</h3>";
 
     try
     {

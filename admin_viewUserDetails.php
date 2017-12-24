@@ -6,8 +6,18 @@ $user = unserialize(base64_decode($_POST["selectedObject"]));
 $proofdoc = $user->getProofdoc();
 $user_id = $user->getUserId();
 
-echo "User Details";
-echo "<br><br>";
+echo "
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>Admin | View User Details</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/viewRequest.css\">
+</head>
+<body>
+<form class='form'>
+ ";
+
+echo "<h3>User Details</h3>";
 echo "User ID\t:\t" . $user->getUserId();
 echo "<br>";
 echo "Status\t:\t" . $user->getStatus();
@@ -56,3 +66,4 @@ if ($user->getStatus() != 'a')
     echo "<input type=\"hidden\" name=\"selectedObject\" value=\"" . base64_encode(serialize($user)) . "\"/>";
     echo "</td></form>";
 }
+echo "</form>";
