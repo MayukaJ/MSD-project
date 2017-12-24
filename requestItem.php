@@ -51,8 +51,8 @@ if(array_key_exists("requested",$_GET))
     try
     {
         $db->makeTable(
-        ['Item ID', 'Title', 'Description', 'Donor', 'Category', 'Date', 'Request'], [3, 5, 7], null,
-        $itemList, true, 'request', "Request", ""
+        ['Item ID', 'Title', 'Description', 'Picture', 'Donor', 'Category', 'Date', 'Request'], [5, 7], null,
+        $itemList, true, 'request', "Request", "requestThisItem.php"
     );
     } catch (DatabaseException $e) {
         $e->echoDetails();

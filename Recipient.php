@@ -1,5 +1,5 @@
 <?php
-include 'User.php';
+require_once "User.php";
 
 class Recipient extends User
 {
@@ -14,6 +14,7 @@ class Recipient extends User
     public function __construct($user_id, $pwd, $status, $date_created, $name, $address, $phone, $email, $nic, $age, $occupation, $place_of_work, $salary, $proofdoc, $summery)
 
     {
+
         $this->age=$age;
         $this->occupation=$occupation;
         $this->place_of_work=$place_of_work;
@@ -62,7 +63,7 @@ class Recipient extends User
 
     public function report()
     {
-        $this->status = 'reported';
+        $this->status = self::ALLOWED_STATUSES[1];
         $db = new Database();
         $db->update('user',"user_id = '$this->user_id'", ['status'],['reported']);
     }
@@ -125,13 +126,40 @@ class Recipient extends User
     }
 
 
+    public static function readRecipient($user_id)
+    {
+        $db = new Database();
+        try
+        {
 
-    public function returnListOfWaiting(Database $db)
+            $db->select('user RIGHT', '*', 'user_requester ON user.user_id =user_requester.user_id',
+                "user.user_id = '$user_id'");
+
+            $row = $db->results[0];
+            return new Recipient(
+                    $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7],
+                    $row[9], $row[11], $row[12], $row[13], $row[14], $row[15], $row[16]
+
+                // user_id pwd status date_created name address phone email -- nic -- age occupation  place of work salary proofdoc summary
+                );
+
+        }
+        catch (DatabaseException $e)
+        {
+            $e->echoDetails();
+        }
+        catch (Exception $e)
+        {
+            echo "Exception in method ". __METHOD__;
+        }
+    }
+
+    public function returnList(Database $db, $status)
     {
         try
         {
-            $db->select('user, user_requester', '*', null,
-                "user.status = 'w'",
+            $db->select('user RIGHT', '*', 'user_requester ON user.user_id =user_requester.user_id',
+                "user.status = '$status'",
                 null, null, self::MAX_NO_VIEW);
 
             $userList = array();

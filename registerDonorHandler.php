@@ -1,22 +1,21 @@
 <?php
 include_once 'Donor.php';
 
-$uname =$_POST['username'];
-$Name = $_POST['name'];
-$mail = $_POST['email'];
-$pwd = $_POST['psw'];
-$num = $_POST['num'];
-$repwd = $_POST['psw-repeat'];
-
+$user_id =$_POST['user_id'];
+$pwd = $_POST['pwd'];
+$repeat_pwd = $_POST['repeat_pwd'];
+$name = $_POST['name'];
 $address = $_POST['address'];
+$phone = $_POST['phone'];
+$email = $_POST['email'];
 $nic = $_POST['nic'];
 
-if(user::validateuser($uname,$mail,$pwd,$repwd))
-{
-    $new_user = new Donor($uname,$Name,$pwd,$num,$mail,'ACTIVE', $address, $nic);
-    $new_user->writetoUserDB();
-    $new_user->writeToDonorAndUserDB();
+$status = User::ALLOWED_STATUSES[0]; //ACTIVE
 
+if(user::validateuser($user_id,$email,$pwd,$repeat_pwd))
+{
+    $user = new Donor($user_id, $pwd, $status, 'now()', $name, $address, $phone, $email, $nic, 0);
+    $user->writeToDonorAndUserDB();
 }
 
 

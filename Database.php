@@ -55,6 +55,20 @@ class Database
         return true;
     }
 
+
+    function runQuery($query)
+    {
+        $this->res = $this->conn->query($query);
+        if (!$this->res)
+        {
+            $e = new DatabaseException(__METHOD__, "Invalid SELECT Query", $query);
+            $e->echoDetails();
+            throw $e;
+        } else {
+            $this->makeArray();
+        }
+    }
+
     /**
      * @throws DatabaseException
      */
@@ -77,8 +91,8 @@ class Database
         if ($limit != null) {
             $q .= ' LIMIT ' . $limit;
         }
-
         $this->res = $this->conn->query($q);
+
 
         if (!$this->res) {
             $e = new DatabaseException(__METHOD__, "Invalid SELECT Query", $q);
@@ -149,7 +163,6 @@ class Database
         }
         $q = substr($q, 0, -2);
         $q .= ")";
-
         if(!mysqli_query($this->conn, $q))
         {
             throw new DatabaseException(__METHOD__, "Invalid INSERT INTO query", $q);
@@ -226,6 +239,16 @@ class Database
         $noColsGiven = count($columnTitles);
         $noColsInResult = count($this->fieldNames);
         $noColsToSkip = count($skipCols);
+        $pictureColumn = -1;
+
+        for ($colT = 0; $colT < count($columnTitles); $colT++)
+        {
+            if ($columnTitles[$colT] == 'Picture')
+            {
+                $pictureColumn = $colT;
+                break;
+            }
+        }
 
         if($isButton)
             $isValid = $noColsGiven != ($noColsInResult -$noColsToSkip + 1);
@@ -254,7 +277,14 @@ class Database
             for($colNum = 0; $colNum < count($this->results[$rowNum]) ; $colNum++)
             {
                 if(in_array($colNum, $skipCols)) continue;
-                echo "<td>" . $this->results[$rowNum][$colNum] . "</td>";
+
+                if($colNum == $pictureColumn)
+                {
+                    $path = $this->results[$rowNum][$colNum];
+                    echo "<td><img src=\"$path\" width=\"150\"></td>";
+                }
+                else
+                    echo "<td>" . $this->results[$rowNum][$colNum] . "</td>";
             }
             if($isButton)
             {
@@ -263,8 +293,6 @@ class Database
                 echo "<input type=\"hidden\" name=\"whoObject\" value=\"" . base64_encode(serialize($whoObject)) . "\"/>";
                 echo "<input type=\"hidden\" name=\"selectedObject\" value=\"" . base64_encode(serialize($objectArray[$rowNum])) . "\"/>";
                 echo "</td></form>";
-
-
 
             }
 

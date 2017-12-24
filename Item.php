@@ -7,12 +7,14 @@
 
 require_once("Database.php");
 require_once ("ItemException.php");
+require_once ("User.php");
 
 class Item
 {
     const ALLOWED_CATEGORIES = array("clothes", "books", "shoes", "sportsequipment", "electronicappliances", "musicialequipment", "furniture");
     const MAX_NO_VIEW = 10;
     const IMAGE_DIRECTORY = "item_images/";
+    const ALLOWED_STATUSES = ["advertised", "confirmed by donor", "sent by donor", "received by admin", "sent by admin", "received by requester"];
 
     protected $item_id;
     protected $title;
@@ -29,7 +31,7 @@ class Item
     {
         $numArgs = func_num_args();
 
-        if($numArgs == 10)
+        if($numArgs == 9)
         {
             $this->setAll(func_get_arg(0),
                 func_get_arg(1),
@@ -181,6 +183,41 @@ class Item
         }
     }
 
+
+    /**This function searches the database for AVAILABLE items with equal CATEGORTY and Title LIKE Keyword string. R
+     * Returns array of 10 or less objects
+     * @param $category
+     * @param $keywordString
+     * @param Database $db
+     * @return array
+     */
+    public static function returnDonatedItems(Database $db, $user)
+    {
+        $user_id = $user->getUserId();
+        try
+        {
+            $db->select('item', '*',null,"donor_id = '$user_id'");
+
+            $itemsList = array();
+
+            foreach ($db->results as $row) {
+                array_push($itemsList, new Item(
+                    $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8]
+                ));
+            }
+
+            return $itemsList;
+        }
+        catch (DatabaseException $e)
+        {
+            $e->echoDetails();
+        }
+        catch (Exception $e)
+        {
+            echo "Exception in method ". __METHOD__;
+        }
+    }
+
     /**
      * @return int
      */
@@ -225,6 +262,31 @@ class Item
             echo "Exception in method ". __METHOD__;
         }
     }
+
+    public function changeStatusTo($status)
+    {
+        $a = self::ALLOWED_STATUSES;
+
+        if(!in_array($status, $a)) return;
+        $db = new Database();
+
+        if(
+            ($status == $a[1] && $this->status = $a[0])
+            ||  ($status == $a[2] && $this->status = $a[1])
+            ||  ($status == $a[3] && $this->status = $a[2])
+            ||  ($status == $a[4] && $this->status = $a[3])
+            ||  ($status == $a[5] && $this->status = $a[4])
+            ||  ($status == $a[6] && $this->status = $a[5])
+        )
+
+        {
+            $this->status = $status;
+            $db->update('item', "item_id = '$this->item_id'",['status'],["$status"]);
+        }
+    }
+
+
+
 
 
 
@@ -273,6 +335,12 @@ class Item
     {
         return $this->status;
     }
+
+    public function getDateSubmitted()
+    {
+        return $this->date_submitted;
+    }
+
 
 
 

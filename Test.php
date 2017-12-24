@@ -1,3 +1,17 @@
+<?php
+
+include_once ('Recipient.php');
+
+$user = Recipient::readRecipient('aba007');
+
+echo $user->getEmail();
+
+
+
+
+?>
+
+
 <html>
 <head>
     <title> "Add item" </title>
