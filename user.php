@@ -4,35 +4,38 @@ include_once "Database.php";
 class User{
 
     protected $user_id;
+    protected $pwd;
+    protected $status;
+    protected $date_created;
     protected $name;
-    protected $pass;
+    protected $address;
     protected $phone;
     protected $email;
-    protected $item;
-    protected $status;
-    protected $dateC;
     protected $type;
-    protected $userType;
-    //protected $photo;
-    public const ALLOWED_TYPES = array("USER","REQUESTER","DONOR");
-    public const ALLOWED_STATUSES = array("active","reported","awaiting");
+    protected $nic;
+
+    protected $item;
+
+
+    public const ALLOWED_TYPES = array("U","R","D", "A");
+    public const ALLOWED_STATUSES = array("a","r","w"); //ACTIVE, REPORTED, WAITING
     public const IMAGE_DIRECTORY ="user_images/";
-    public const DOC_DIRECTORY ="user_docs/";
-    public const MAX_VIEW = 10;
+    public const DOC_DIRECTORY ="user_proofdocs/";
+    public const MAX_NO_VIEW = 10;
 
+    public function fillUserDetails($user_id, $pwd, $status, $date_created, $name, $address, $phone, $email, $type, $nic)
 
-
-
-    public function fillUserDetails($id, $n, $pw, $p, $mail, $usertype, $status)
     {
-        $this->userType = $usertype;
-        $this->user_id=$id;
-        $this->name=$n;
-        $this->pass=password_hash($pw, PASSWORD_DEFAULT);
-        $this->phone=$p;
-        $this->email=$mail;
-        $this->dateC=date("Y.m.d");
+        $this->type = $type;
+        $this->user_id=$user_id;
+        $this->name=$name;
+        $this->pwd=password_hash($pwd, PASSWORD_DEFAULT);
+        $this->phone=$phone;
+        $this->email=$email;
+        $this->date_created=$date_created;
         $this->status = $status;
+        $this->address = $address;
+        $this->nic = $nic;
     }
 
     public function writeAdditional(){
@@ -50,8 +53,14 @@ class User{
 
     public function writetoUserDB()
     {
-        $DB = new Database();
-        $DB->insertInto('user',[$this->user_id,$this->pass,$this->status,'now()',$nme,$phn,$ml,$tp]);
+        try {
+            $DB = new Database();
+            $DB->insertInto('user', [$this->user_id, $this->pwd, $this->status, 'now()', $this->name, $this->address, $this->phone, $this->email, $this->type, $this->nic]);
+            //                              user_id	         pwd	    status	  date_created	name	address	            phone	    email	    type	        nic
+        } catch (DatabaseException $e) {
+            $e->echoDetails();
+        }
+
     }
 
     public static function validateuser($uname,$mail,$pwd,$repwd){
@@ -77,6 +86,103 @@ class User{
         }
     }
 
-}
+    public function deleteUser()
+    {
+        $db = new Database();
+        $db->delete('user', "user_id = '$this->user_id'");
+        $db->delete('donor', "user_id = '$this->user_id'");
+        $db->delete('user_requester', "user_id = '$this->user_id'");
+    }
 
-?>
+
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPwd()
+    {
+        return $this->pwd;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->date_created;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNic()
+    {
+        return $this->nic;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
+
+
+
+}
