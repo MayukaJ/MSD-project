@@ -4,58 +4,58 @@ require_once("Database.php");
 require_once("Item.php");
 require_once("User.php");
 require_once("Recipient.php");
-require_once ("Request.php");
+require_once("Request.php");
 
 session_start();
+User::checkLogin('r');
 
 $user = $_SESSION['user'];
 $user_id = $user->getUserId();
 $name = $user->getName();
 
-echo "
-<html lang=\"en\">
+if(isset($_GET["request"]))
+{
+    header("Location:requestItem.php");
+}
+elseif (isset($_GET["logout"]))
+{
+    User::logout();
+}
+
+echo "<html lang=\"en\">
 <head>
     <meta charset=\"UTF-8\">
-    <title>Home | Recipient</title>
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/home.css\">
+    <title>Recipient Home</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/requestItem.css\">
 </head>
+
 <body>
-<table id=\"table\">
-    <tr>
-        <header>
-            <h2>Welcome ";
-echo $name;
+<form class=\"topnav\" action = \"recipientHome.php\" method = \"get\" >
+    <table>
+        <tr><td>
+                <h2>Recipient Home</h2>
+            </td>";
 
-echo "</h2>
-        </header>
-    </tr>
-    <tr>
-        <div>
-            <h4>Your currently requested items</h4>
-";
+echo "<td align='center'><input type=\"submit\" name=\"request\" value=\"Request an Item\"></td>";
+
+echo "<td><h4 align = right>Welcome:<br>" . $name . "</h4></td>";
 
 
+echo "<td><input type=\"submit\" name=\"logout\" value=\"Log Out\"></td></tr>
+    </table>";
 
-        $db = new Database();
-        $requestsList = Request::returnRecipientRequests($db, $user);
 
-        $requestsList[0]->item->getItemId();
+echo "<h4 align = center>Your Currently Requested Items</h4>";
+echo "</form></div><br>";
 
-        $db->makeTable(["Request ID", "Item ID", "Title", "Description", "Picture", "Donor ID", "Category", "Status", "Date Submitted", "Cancel Request"],
-            [6], null, $requestsList, true, "cancel", "Cancel Request", "reciepient_cancelRequest.php"
-            );
 
-?>
+$db = new Database();
+$requestsList = Request::returnRecipientRequests($db, $user);
 
-        </div>
-    </tr>
-    <tr>
-        <br>
-        <br>
-        <div>
-            <a href="requestItem.php" class="btn">Request New Item</a>
-        </div>
-    </tr>
-</table>
-</body>
-</html>
+//$requestsList[0]->item->getItemId();
+
+$db->makeTable(["Request ID", "Item ID", "Title", "Description", "Picture", "Donor ID", "Category", "Status", "Date Submitted", "Cancel Request"],
+    [6], null, $requestsList, true, "cancel", "Cancel Request", "reciepient_cancelRequest.php"
+);
+
+echo "</form></div></body></html>";

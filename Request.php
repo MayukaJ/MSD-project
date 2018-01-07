@@ -29,6 +29,8 @@ class Request
             $db->delete('request', "request_id = '$this->request_id'");
             echo "Request Rejected";
         }
+        else
+            echo "You have confirmed this request. Confirmed requests cannot be rejected.";
     }
     public function addToDB()
     {
@@ -135,10 +137,11 @@ WHERE request.user_id = '$user_id'";
             WHERE item.donor_id = '$user_id'  AND item.requester_id ";
 
             if($isConfirmed)
-                $query .= "!= ''";
+                $query .= "IS NOT NULL";
             else
-                $query .= " = ''";
+                $query .= "IS NULL";
 
+            //echo $query;
 
             $db->runQuery($query);
             $requestsList = array();
@@ -187,8 +190,6 @@ WHERE request.user_id = '$user_id'";
             LEFT JOIN user ON user.user_id = request.user_id
             LEFT JOIN user_requester ON user_requester.user_id = user.user_id
             WHERE item.status = '$statusSent'  OR item.status = '$statusRecieved'";
-
-            echo $query;
 
             $db->runQuery($query);
             $requestsList = array();

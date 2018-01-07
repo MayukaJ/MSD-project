@@ -3,6 +3,7 @@
 require_once "Request.php";
 require_once "Database.php";
 require_once "Item.php";
+User::checkLogin('r');
 
 $request = unserialize(base64_decode($_POST["selectedObject"]));
 

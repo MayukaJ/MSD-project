@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,36 +22,34 @@
         <option value="furniture">Furniture items</option>
     </select>
     <input type="text" placeholder="Enter keywords" name="keywordString">
-    <input type="hidden" name="requested" value="true">
     <input type="submit" name="search" value="Search">
-            </td></tr>
+            </td>
+            <td><input type="submit" name="logout" value="Log Out"></td>
+        </tr>
     </table>
-</form>
 
-</div>
-</body>
-</html>
 
 <?php
 
 require_once ('Item.php');
 require_once ('Database.php');
+User::checkLogin('r');
 
 $requested = false;
 $category = "";
 $db = new Database();
 
-if(array_key_exists("requested",$_GET))
+if(isset($_GET["category"]) && $_GET["category"]!= "null")
 {
-    $requested = ($_GET["requested"] != "true");
-    echo $category;
     $category = $_GET['category'];
     $keywordString = $_GET['keywordString'];
 
     $itemList = Item::returnAvailItems($category, $keywordString, $db);
 
 
-    echo "<h3>Following items are available in :" . ucwords($category ). "</h3>";
+    echo "<h4 align='center'>Following items are available in :\t" . ucwords($category ). "</h4>";
+
+    echo "</form></div><br>";
 
     try
     {
@@ -63,6 +62,14 @@ if(array_key_exists("requested",$_GET))
     }
 
 }
+elseif (isset($_GET["logout"]))
+{
+    User::logout();
+}
+else
+    echo "</form></div>";
+
+echo "</body></html>";
 
 
 ?>

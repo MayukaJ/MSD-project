@@ -63,10 +63,10 @@ class User{
 
     }
 
-    public static function validateuser($uname,$mail,$pwd,$repwd){
+    public static function validateuser($uname,$mail,$pwd,$repwd,$phoneNum,$NIC){
         $db = new Database();
         if($pwd!=$repwd){
-            echo "passwords doesnt match";
+            //echo "passwords doesnt match";
             return false;
         }else {
             if (!filter_var($mail, FILTER_VALIDATE_EMAIL)){
@@ -80,10 +80,48 @@ class User{
                     return false;
                 }
                 else{
-                    return true;
+                    if ((strlen($phoneNum)!=10) or !is_numeric($phoneNum)){
+                        echo "wrong type of phone number";
+                        return false;
+                    }else{
+                        if ((strlen($NIC)!=10) or !(substr($NIC, -1)=='V' or substr($NIC, -1)=='v') or !(is_numeric(substr($NIC, 0,-1)))){
+                            echo "wrong type of NIC";
+                        return false;
+                        }else{
+                            return true;
+                        }
+                    }
+
                 }
             }
         }
+    }
+
+    public static function readUser($user_id)
+    {
+        $db = new Database();
+        try
+        {
+
+            $db->select('user', '*', null,
+                "user.user_id = '$user_id'");
+
+            $row = $db->results[0];
+            $user = new User();
+
+            $user->fillUserDetails($row[0], $row[1], $row[2],$row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9]);
+            return $user;
+
+        }
+        catch (DatabaseException $e)
+        {
+            $e->echoDetails();
+        }
+        catch (Exception $e)
+        {
+            echo "Exception in method ". __METHOD__;
+        }
+
     }
 
     public function deleteUser()
@@ -92,6 +130,49 @@ class User{
         $db->delete('user', "user_id = '$this->user_id'");
         $db->delete('donor', "user_id = '$this->user_id'");
         $db->delete('user_requester', "user_id = '$this->user_id'");
+    }
+
+    public static function logout()
+    {
+        if (session_status() == PHP_SESSION_NONE)
+        {
+            session_start();
+        }
+        session_unset();
+        Database::messageBox("You have logged out", "Go to home", "index.php");
+    }
+
+    public static function checkLogin($pageType) //Pagetype = r,d,a,n
+    {
+        include_once 'Recipient.php';
+        include_once 'Donor.php';
+        if (session_status() == PHP_SESSION_NONE)
+            session_start();
+        $type = "n";
+
+        if(isset($_SESSION["user"]))
+        {
+            $user = $_SESSION["user"];
+            try
+            {
+                $type = strtolower($user->type);
+            }
+            catch (Exception $e)
+            {}
+        }
+
+        if ($type == $pageType)
+            return;
+        elseif($type == 'a')
+            header("Location:admin_Home.php");
+        elseif($type == 'd')
+            header("Location:donorHome.php");
+        elseif($type == 'r')
+            header("Location:recipientHome.php");
+        elseif($type == 'n')
+            header("Location:index.php");
+
+
     }
 
 

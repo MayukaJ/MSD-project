@@ -65,7 +65,10 @@ class Recipient extends User
     {
         $this->status = self::ALLOWED_STATUSES[1];
         $db = new Database();
-        $db->update('user',"user_id = '$this->user_id'", ['status'],['reported']);
+        if($db->update('user',"user_id = '$this->user_id'", ['status'],['reported']))
+            echo "Recipient has been reported. Administrators will take necessary action";
+        else
+            echo "Cannot report this recipient";
     }
     public function requestItem(Item $item)
     {

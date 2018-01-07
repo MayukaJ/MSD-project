@@ -1,10 +1,12 @@
 <?php
 
 require_once("Recipient.php");
+User::checkLogin('a');
 
 $user = unserialize(base64_decode($_POST["selectedObject"]));
-$proofdoc = $user->getProofdoc();
-$user_id = $user->getUserId();
+@$proofdoc = $user->getProofdoc();
+@$user_id = $user->getUserId();
+
 
 echo "
 <html lang=\"en\">
@@ -50,20 +52,21 @@ echo "Summary\t:\t" . $user->getSummary();
 
 echo "<br><br>";
 
-echo "<td><form action = \"downloadFile.php" . " \" method = \"post\">";
+echo "<table></form>";
+
+
+echo "<tr><form action = \"downloadFile.php" . " \" method = \"post\">";
 echo "<input type=\"submit\" name=\"download\" value=\"Download file\">";
 echo "<input type=\"hidden\" name=\"path\" value=\"$proofdoc\">";
 echo "<input type=\"hidden\" name=\"fileName\" value=\"".basename($proofdoc)."\">";
-echo "</td></form>";
-
-echo "<br><br>";
+echo "</form></tr>";
 
 if ($user->getStatus() != 'a')
 {
-    echo "<td><form action = \"admin_processUser.php" . " \" method = \"post\">";
+    echo "<tr><form action = \"admin_processUser.php" . " \" method = \"post\">";
     echo "<input type=\"submit\" name=\"accept\" value=\"Make User Active\">";
     echo "<input type=\"submit\" name=\"reject\" value=\"Reject and Delete User\">";
     echo "<input type=\"hidden\" name=\"selectedObject\" value=\"" . base64_encode(serialize($user)) . "\"/>";
-    echo "</td></form>";
+    echo "</form></tr>";
 }
-echo "</form>";
+echo "</table>";

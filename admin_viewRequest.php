@@ -7,6 +7,7 @@ require_once("Request.php");
 require_once("Item.php");
 
 session_start();
+User::checkLogin('a');
 $request = unserialize(base64_decode($_POST["selectedObject"]));
 
 $item = $request->item;

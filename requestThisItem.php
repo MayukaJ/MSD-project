@@ -4,9 +4,10 @@ require_once "Database.php";
 require_once "Request.php";
 require_once "Recipient.php";
 require_once "Item.php";
+User::checkLogin('r');
 
 
-session_start();
+@session_start();
 
 $user = $_SESSION['user'];
 $item = unserialize(base64_decode($_POST["selectedObject"]));

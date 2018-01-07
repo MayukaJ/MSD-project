@@ -12,13 +12,34 @@ $db->select('user' , 'pwd, type' , null , "user_id = '$user_id'" );
 
 if ($db->numResults == 0)
 {
-    echo "User doesn't exist";
-    //header('Location: '.'admin_processUser.php');
+    echo "
+                <html lang=\"en\">
+                <head>
+                    <meta charset=\"UTF-8\">
+                    <title>Username does not exist</title>
+                    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/messegeBox.css\">
+                     
+                </head>
+                <body>
+                <form class='form'>";
+    echo "<form class='form'><h4>Username does not exist</h4><br><a href=\"index.php\" class=\"btn\">Go Back</a>
+            </form></body></html>";
 }
 
 elseif (!password_verify($pwd, $db->results[0][0]))
 {
-    echo "Username and Password don't match";
+    echo "
+                <html lang=\"en\">
+                <head>
+                    <meta charset=\"UTF-8\">
+                    <title>Password Mismatch</title>
+                    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/messegeBox.css\">
+                     
+                </head>
+                <body>
+                <form class='form'>";
+    echo "<form class='form'><h4>Your username and password don't match.</h4><br><a href=\"index.php\" class=\"btn\">Go Back</a>
+            </form></body></html>";
 }
 else
 {
@@ -27,12 +48,32 @@ else
 
     if ($type==User::ALLOWED_TYPES[1])              //Receiptient
     {
-        $user = Recipient::readRecipient($user_id);
+        $db = new Database();
+        $db->select('user' , 'status' , null , "user_id = '$user_id'" );
 
-        $_SESSION['user'] = $user;
-        $_SESSION['type'] = $type;
+        if($db->results[0][0] == "a") {
+            $user = Recipient::readRecipient($user_id);
 
-        header('Location: '.'recipientHome.php');
+            $_SESSION['user'] = $user;
+            $_SESSION['type'] = $type;
+
+            header('Location: ' . 'recipientHome.php');
+        }
+        else
+        {
+            echo "
+                <html lang=\"en\">
+                <head>
+                    <meta charset=\"UTF-8\">
+                    <title>Account Not Active</title>
+                    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/messegeBox.css\">
+                     
+                </head>
+                <body>
+                <form class='form'>";
+            echo "<form class='form'><h4>Your account is not active. Please contact an administrator.</h4><br><a href=\"index.php\" class=\"btn\">Go Back</a>
+            </form></body></html>";
+        }
     }
     elseif ($type==User::ALLOWED_TYPES[2])             //Donor
     {
@@ -45,31 +86,10 @@ else
     }
     elseif ($type==User::ALLOWED_TYPES[3])             //Admin
     {
-        $_SESSION['type'] = $admin;
+        $user = User::readUser($user_id);
+        $_SESSION['user'] = $user;
+        $_SESSION['type'] = $type;
 
         header('Location: '.'admin_Home.php');
     }
 }
-
-
-
-
-
-
-//$db->select('user' , 'pwd' , null , "user_id = '$user_id'" );
-//$flag = password_verify($pwd,$db->results[0][0]);
-//if ($flag==1)
-//{
-//    $db->select('user' , '*' , null , 'user_id =' . $uname1 );
-//    $ch=$db->results[0][7];
-//    if ($ch=="R")
-//    {
-//        header('Location: '.'recipientHome.php');
-//        $newuser = new Donor($db->results[0][0],$db->results[0][4],$db->results[0][7]);
-//    }elseif ($ch=="D"){
-//        header('Location: '.'donorHome.php');
-//    }
-//}else{
-//    header('Location: '.'login.html');
-//}
-

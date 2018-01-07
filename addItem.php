@@ -1,3 +1,8 @@
+<?php
+include_once "User.php";
+User::checkLogin('d');
+?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">

@@ -91,6 +91,7 @@ class Database
         if ($limit != null) {
             $q .= ' LIMIT ' . $limit;
         }
+
         $this->res = $this->conn->query($q);
 
 
@@ -166,6 +167,10 @@ class Database
         if(!mysqli_query($this->conn, $q))
         {
             throw new DatabaseException(__METHOD__, "Invalid INSERT INTO query", $q);
+        }
+        else
+        {
+            return true;
         }
     }
 
@@ -405,5 +410,15 @@ class Database
             $e->echoDetails();
         }
 
+    }
+
+    public static function messageBox($message, $buttonText, $link)
+    {
+        if (session_status() == PHP_SESSION_NONE)
+        {
+            session_start();
+        }
+        $_SESSION["messageBoxInfo"] = base64_encode(serialize([$message, $buttonText, $link]));
+        header("Location:messageBox.php");
     }
 }

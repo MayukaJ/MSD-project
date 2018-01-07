@@ -191,22 +191,43 @@ class Item
      * @param Database $db
      * @return array
      */
-    public static function returnDonatedItems(Database $db, $user)
+    public static function returnDonatedItems(Database $db, $user = null)
     {
-        $user_id = $user->getUserId();
-        try
-        {
-            $db->select('item', '*',null,"donor_id = '$user_id'");
+        try {
+            if ($user == null) {
 
-            $itemsList = array();
+                $db->select('item LEFT', 'item.*, request.user_id', 'request ON (request.user_id = item.requester_id) AND (request.item_id = item.item_id)', "item.status != 'advertised'");
 
-            foreach ($db->results as $row) {
-                array_push($itemsList, new Item(
-                    $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8]
-                ));
+                $itemsRequestList = array();
+
+                foreach ($db->results as $row)
+                {
+
+                    array_push($itemsRequestList, [new Item(
+                        $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8]
+                    ), $row[9]]
+                    );
+                }
+
+                return $itemsRequestList;
             }
+            else
+            {
+                $user_id = $user->getUserId();
+                $where = "donor_id = '$user_id'";
 
-            return $itemsList;
+                $db->select('item', '*', null, $where);
+
+                $itemsList = array();
+
+                foreach ($db->results as $row) {
+                    array_push($itemsList, new Item(
+                        $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8]
+                    ));
+                }
+
+                return $itemsList;
+            }
         }
         catch (DatabaseException $e)
         {
@@ -263,7 +284,7 @@ class Item
         }
     }
 
-    public function changeStatusTo($status, $requester_id)
+    public function changeStatusTo($status, $requester_id = null)
     {
         $a = self::ALLOWED_STATUSES;
 
@@ -275,18 +296,17 @@ class Item
             $this->requester_id = $requester_id;
             $db->update('item', "item_id = '$this->item_id'",['requester_id'],["$requester_id"]);
         }
-        if(
+        if (
             ($status == $a[1] && $this->status = $a[0])
             ||  ($status == $a[2] && $this->status == $a[1])
             ||  ($status == $a[3] && $this->status == $a[2])
             ||  ($status == $a[4] && $this->status == $a[3])
             ||  ($status == $a[5] && $this->status == $a[4])
-            ||  ($status == $a[6] && $this->status == $a[5])
         )
         {
             $this->status = $status;
             $db->update('item', "item_id = '$this->item_id'",['status'],["$status"]);
-            echo "Item Status Updated";
+            Database::messageBox("Item status updated","Go back", "index.php");
         }
 
     }
@@ -301,6 +321,7 @@ class Item
         $db = new Database();
         $db->delete('item', "item_id = $this->item_id");
         $db->delete('request', "item_id = $this->item_id");
+        Database::messageBox("Item removed","Go back", "index.php");
     }
 
 

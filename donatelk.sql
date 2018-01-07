@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 24, 2017 at 04:57 AM
+-- Generation Time: Dec 27, 2017 at 02:04 PM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.1.12
 
@@ -38,10 +38,9 @@ CREATE TABLE `donor` (
 --
 
 INSERT INTO `donor` (`user_id`, `rating`) VALUES
-('aba0000000', 0),
-('aba9999', 0),
-('c11', 0),
-('rash111', 0);
+('aba1', 0),
+('chinthana1', 0),
+('rash1', 0);
 
 -- --------------------------------------------------------
 
@@ -66,20 +65,12 @@ CREATE TABLE `item` (
 --
 
 INSERT INTO `item` (`item_id`, `title`, `description`, `photo_path`, `donor_id`, `requester_id`, `category`, `status`, `date_submitted`) VALUES
-(1, 'A', 'aa', '', 'rash111', 'aba008', 'clothes', 'confirmed ', '0000-00-00 00:00:00'),
-(2, 'NEW ITEM', 'aa', '', 'aba123', '', 'clothes', 'sent', '0000-00-00 00:00:00'),
-(4, 'A', 'aa', '', 'rash111', '', 'clothes', 'advertised', '2017-12-19 08:14:56'),
-(5, 'NEW ITEM', 'aa', 'item_images/5.jpg', 'aba123', '', 'clothes', 'sent', '2017-12-19 08:25:35'),
-(6, 'A', 'aa', 'item_images/6.jpg', 'aba123', 'aba008', 'clothes', 'advertised', '2017-12-19 08:30:00'),
-(7, 'A', 'aa', '', 'aba123', NULL, 'clothes', 'advertised', '2017-12-19 08:35:29'),
-(8, 'Food Sugar', 'Tasty food for you', '', 'aba123', NULL, 'Food', 'advertised', '2017-12-19 09:02:42'),
-(9, 'GAPTshirts', 'Brand new t shirts for u', '', 'aba123', NULL, 'clothes', 'advertised', '2017-12-19 09:09:25'),
-(10, 'A', 'aa', '', 'aba123', NULL, 'clothes', 'advertised', '2017-12-19 08:29:03'),
-(11, 'GAPTshirts', 'Brand new t shirts for u', '', 'aba123', NULL, 'clothes', 'advertised', '2017-12-19 09:12:34'),
-(12, 'A', 'aa', 'item_images/12.jpg', 'aba123', NULL, 'clothes', 'advertised', '2017-12-19 14:27:10'),
-(13, 'A', 'aa', 'item_images/13.jpg', 'aba123', NULL, 'clothes', 'advertised', '2017-12-19 14:27:45'),
-(14, 'Sc', 'dvzsv', 'item_images/14.jpg', 'aba123', NULL, 'clothes', 'advertised', '2017-12-19 16:50:02'),
-(15, 'Asfb', 'vsfdbsdfzb', 'item_images/15.jpg', 'aba123', NULL, 'shoes', 'advertised', '2017-12-20 05:39:49');
+(1, 'Book', 'blah blah', 'item_images/1.jpg', 'rash1', '', 'books', 'confirmed by donor', '2017-12-26 15:43:06'),
+(2, 'Dress', 'blah blah', 'item_images/2.jpg', 'rash1', NULL, 'clothes', 'advertised', '2017-12-26 15:43:40'),
+(3, 'Newshoe', 'shoessss', 'item_images/3.jpg', 'rash1', NULL, 'shoes', 'advertised', '2017-12-26 15:45:13'),
+(4, 'Table', 'table', 'item_images/4.jpg', 'aba1', NULL, 'furniture', 'advertised', '2017-12-26 15:48:42'),
+(5, 'Deckshoes', 'deck shoesss', 'item_images/5.jpg', 'aba1', 'aba008', 'shoes', 'sent by admin', '2017-12-26 15:49:07'),
+(6, 'Desk', 'very valuable', 'item_images/6.jpg', 'chinthana1', NULL, 'furniture', 'advertised', '2017-12-26 15:51:10');
 
 -- --------------------------------------------------------
 
@@ -99,8 +90,11 @@ CREATE TABLE `request` (
 
 INSERT INTO `request` (`request_id`, `user_id`, `item_id`) VALUES
 ('1', 'aba008', 6),
+('10', 'aba008', 5),
 ('5', 'aba008', 1),
-('7', 'aba008', 4);
+('7', 'aba008', 4),
+('8', 'iresha1', 2),
+('9', 'mayuka1', 1);
 
 -- --------------------------------------------------------
 
@@ -126,17 +120,13 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `pwd`, `status`, `date_created`, `name`, `address`, `phone`, `email`, `type`, `nic`) VALUES
-('aaaaaa', '$2y$10$uPp', 'a', '2017-12-23 15:08:44', 'aaaaaa', 'A3(a), University Quarters,, Upper Hanthana', '758203376', 'abarajithan07@gmail.com', 'R', '11'),
-('aba0000000', '$2y$10$UDONloRuLAwNBN58Mrm5SONdu2XaxavZPOdD5UTnx0dUzAftg/9BC', 'a', '2017-12-23 23:58:21', 'Abarajithan Gnaneswr', 'A3(a), University Quarters,, Upper Hanthana', '758203376', 'abarajithan07@gmail.com', 'D', '11111111111'),
-('aba007', '$2y$10$B6z', 'a', '2017-12-23 19:26:54', 'Aba', 'A3(a), University Quarters,, Upper Hanthana', '758203376', 'abarajithan07@gmail.com', 'R', '11'),
-('aba008', '$2y$10$ZxLtuzfURjPFZ9gfQaQuMuXmRxkL3fPz2ujFqbqogEHTtLugajVgy', 'r', '2017-12-24 02:30:32', 'Abarajithan Gnaneswr', 'A3(a), University Quarters,, Upper Hanthana', '758203376', 'abarajithan07@gmail.com', 'R', '11'),
-('aba222', '$2y$10$lKM', 'a', '2017-12-23 18:28:28', 'Abarajithan Gnaneswr', 'A3(a), University Quarters,, Upper Hanthana', '758203376', 'abarajithan07@gmail.com', 'R', '11'),
-('aba9999', '$2y$10$a4xe3KekZ76OFUXCB99DXeprE4.6KZ7bWmVPLzYow1MpdxT2Zj/Ya', 'a', '2017-12-23 23:52:21', 'Abarajithan Gnaneswr', 'A3(a), University Quarters,, Upper Hanthana', '758203376', 'abarajithan07@gmail.com', 'D', '11'),
-('aba_admin', '$2y$10$qDDIkGLRUsrXOD1f4YEpj.V2FwT13fGjFZAe84tigcRZnb76mHVg.', 'a', '2017-12-24 03:04:36', 'Abarajithan Admin', 'aa', '011', 'a@a.cm', 'A', '11'),
-('abc123', '$2y$10$JaU', 'w', '2017-12-23 19:20:06', 'scsa', 'A3(a), University Quarters,, Upper Hanthana', '758203376', 'abarajithan07@gmail.com', 'R', '11'),
-('bbbbbb', '$2y$10$/.2', 'r', '2017-12-23 19:17:39', 'bbbbbbbbbbbb', 'A3(a), University Quarters,, Upper Hanthana', '758203376', 'abarajithan07@gmail.com', 'R', '11'),
-('c11', '$2y$10$HPsXCy9SdmJSLNACOitIe.yd3s8XIqKMpElMAxi0IMlpek/dokHzy', 'a', '2017-12-24 00:01:37', 'chinthana', 'cc', '11', 'c@c.l', 'D', '11'),
-('rash111', '$2y$10$iDlbm6ALZa5fbDXzvwunOuvw91BecGWmnzEDZAIKRMbkuga0nFiPm', 'a', '2017-12-24 00:05:49', 'rashmin', 'aa', '11', 'r@r.c', 'D', '11');
+('aba1', '$2y$10$nxkjPjRts84pGQgqit4swea1OENeFty6Zt1.lSEwtleOtopJX3w8u', 'a', '2017-12-26 10:16:35', 'aba', 'ab , pera , kandy .', '0774895214', 'aba@aba.aba', 'D', '965485364v'),
+('admin1', '$2y$10$hJ9iA/agaeiU.wRimaWvl.dyPQevJn3iPgZEsIzyTsX92s66Ns96y', 'a', '2017-12-26 10:34:17', 'admin1', 'none', '0000000000', 'a@l.c', 'A', '000000000V'),
+('chinthana1', '$2y$10$8rKxmzBBSdDDYiUj/kWXtOkEu/YZH/APtB4l9AGmtqP8f9/bfUTGq', 'a', '2017-12-26 10:20:34', 'chinthana', 'chinthana , galle , south', '0775632965', 'chintha@c.com', 'D', '963256954V'),
+('iresha1', '$2y$10$nu2ghLQQNdTVOtjwAJh53e67TSMs2LyQlXpfDrwyCOLO91LOWOCRi', 'a', '2017-12-26 10:38:34', 'Iresha', 'hambantota , hambantota', '0554856321', 'i@k.c', 'R', '984562152V'),
+('mayuka1', '$2y$10$taUFid4h1Hj62qfJfzcuyejPyCetwe717/OFUwwFJQ/FfDLUVgtPO', 'a', '2017-12-26 10:35:07', 'mayuka jayawardana', 'mayu , mt lavania , colombo', '0715621547', 'mayu@h.c', 'R', '956384562V'),
+('rash1', '$2y$10$gD9o1EqgOpBmdujrOgt6U.AFyw7EiJASbl5TipC9PjuzNVLYwPuCe', 'a', '2017-12-26 10:11:45', 'rashmin', 'brito , palatuwa , matara', '0774620921', 'rash@k.com', 'D', '952160982V'),
+('rash2', '$2y$10$B5barUAR9gw7iDdGjxhukOaYveS4gQ96OczllI/NaqsqtlrRI66wK', 'w', '2017-12-26 14:23:13', 'Ravindu Rashmin', 'University of Moratuawa , Moratuwa', '0774620921', 'rashmin.ravindu@gmail.com', 'R', '952160982v');
 
 -- --------------------------------------------------------
 
@@ -159,12 +149,9 @@ CREATE TABLE `user_requester` (
 --
 
 INSERT INTO `user_requester` (`user_id`, `age`, `occupation`, `place of work`, `salary`, `proofdoc`, `summary`) VALUES
-('aaaaaa', 12, 'aaaaaaa', 'aaa', '111', 'item_images/aaaaaaaaaa.JPG', 'aaaaa'),
-('aba007', 11, 'aa', 'aaa', '10', 'user_proofdocs/aba007.JPG', 'aaaaaaaa'),
-('aba008', 11, '11', '11', '11', 'user_proofdocs/aba008.JPG', 'aaa'),
-('aba222', 11, 'aaa', 'aaa', '11', 'user_proofdocs/aba222.JPG', 'aaa'),
-('abc123', 22, 'aa', 'aa', '12', 'item_images/abc123.txt', 'fbxdf'),
-('bbbbbb', 11, 'aa', 'aa', '11', 'item_images/bbbbbbbbbbbbbbbbbbb.JPG', 'aaa');
+('iresha1', 22, 'Student', 'uom', '0', 'user_proofdocs/iresha1.pdf', 'im a student okkkk'),
+('mayuka1', 23, 'student', 'UOM', '0', 'user_proofdocs/mayuka1.pdf', 'im a student still , studieng in mora '),
+('rash2', 23, 'stu', 'uom', '0', 'user_proofdocs/rash2.pdf', 'dasfsdsfadsf');
 
 --
 -- Indexes for dumped tables

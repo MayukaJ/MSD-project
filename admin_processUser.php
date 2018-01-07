@@ -1,5 +1,6 @@
 <?php
 require_once("Recipient.php");
+User::checkLogin('a');
 
 $user = unserialize(base64_decode($_POST["selectedObject"]));
 

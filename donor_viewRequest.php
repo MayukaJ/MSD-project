@@ -5,8 +5,9 @@ require_once("Database.php");
 require_once("Donor.php");
 require_once("Request.php");
 require_once("Item.php");
+User::checkLogin('d');
 
-session_start();
+@session_start();
 $user = $_SESSION['user'];
 
 $request = unserialize(base64_decode($_POST["selectedObject"]));
@@ -22,8 +23,7 @@ echo "
     <link rel=\"stylesheet\" type=\"text/css\" href=\"css/viewRequest.css\">
 </head>
 <body>
-<form class='form'>
- ";
+<td><form class='form' action = \"donor_processRequest.php\"  method = \"post\">";
 
 echo "<h3>Request Details</h3>";
 
@@ -49,7 +49,7 @@ echo "Verified Summary\t:\t" . $requester->getSummary();
 echo "<br>";
 echo "<br>";
 
-echo "<td><form action = \"donor_processRequest.php" . " \" method = \"post\">";
+
 echo "<input type=\"submit\" name=\"accept\" value=\"Accept Request\" >";
 echo "<input type=\"submit\" name=\"reject\" value=\"Reject Request\">";
 echo "<input type=\"submit\" name=\"report\" value=\"Report Requester\">";

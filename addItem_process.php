@@ -9,8 +9,9 @@
 require_once("Database.php");
 require_once("Item.php");
 require_once("Donor.php");
+User::checkLogin('d');
 
-session_start();
+@session_start();
 $donor = $_SESSION['user'];
 $donor_id = $donor->getUserId();
 
@@ -29,13 +30,11 @@ echo "
 <h3>
 ";
 
-
-echo $_POST["category"];
-
-if($_POST["category"] != null && $item->makeFromForm($_POST["title"], $_POST["description"], "$donor_id", $_POST["category"]))
+if( $item->makeFromForm($_POST["title"], $_POST["description"], "$donor_id", $_POST["category"]))
 {
     echo "Item successfully added";
 }
+else echo "Error adding the item. Try again";
 echo "</h3>
 <a href=\"donorHome.php\" class=\"btn\">Go Back</a>
 </form>
