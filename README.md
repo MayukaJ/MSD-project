@@ -41,12 +41,12 @@ Thank you
 
 -------------Usernames & Passwords---------------
 
-TYPE			USERNAME	PASSWORD
+TYPE			USERNAME	      PASSWORD
 
-ADMIN		:	admin1		passpass
-DONOR		:	aba1		pass
-DONOR		:	rash1		pass
-DONOR		:	chinthana1	pass
-RECIPIENT	:	mayuka1		pass
+ADMIN		:	admin1	      passpass
+DONOR		:	aba1		      pass
+DONOR		:	rash1		      pass
+DONOR		:	chinthana1	      pass
+RECIPIENT	:	mayuka1	      pass
 
 -------------------------------------------------
